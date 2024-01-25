@@ -114,12 +114,12 @@ def create_eval_dataset(args):
   elif args.dataset.eval_dataset == "xray":
     eval_ds_list = {}
     if not args.dataset.eval_scene:
-      scene_list = ["SheppLogan"]  # Hier die Szenen für xray hinzufügen
+      scene_list = ["SimpleShape"]#["SheppLogan"]  # Hier die Szenen für xray hinzufügen
     else:
       scene_list = [args.dataset.eval_scene]
 
     if args.dev_run:
-      scene_list = ["SheppLogan"]  # Hier die Dev-Szene für xray hinzufügen
+      scene_list = ["SimpleShape"]#["SheppLogan"]  # Hier die Dev-Szene für xray hinzufügen
 
     for scene in scene_list:
       logging.info("Loading eval scene {} ===============".format(scene))  # pylint: disable=logging-format-interpolation

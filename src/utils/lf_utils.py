@@ -146,7 +146,7 @@ class Plucker(LightField):
         Returns:
             tuple: A tuple containing:
                 lf_samples (jnp.ndarray): Plucker representation of rays.
-                on_intersect_mask (jnp.ndarray): A mask indicating rays that don't intersect the light field manifold.
+                non_intersect_mask (jnp.ndarray): A mask indicating rays that don't intersect the light field manifold.
 
     """
     moments = jnp.cross(rays.origins, rays.directions)

@@ -128,7 +128,7 @@ class BaseDataset(threading.Thread):
 
       if args.dataset.eval_dataset == "xray":
 
-        self.images = self.images.reshape([-1, self.resolution, 3])#shape 3 ????
+        self.images = self.images.reshape([-1, self.resolution, 1])#shape 3 ????
         self.rays = jax.tree_map(
           lambda r: r.reshape([-1, self.resolution, r.shape[-1]]), self.rays)
 
@@ -222,8 +222,11 @@ class BaseDataset(threading.Thread):
 
     pixels = np.stack((x, y, np.ones_like(x)), axis=-1)
     inverse_intrisics = np.linalg.inv(self.intrinsic_matrix[Ellipsis, :3, :3])
+
+    #camera_dirs sind Richtungsvektoren im Kamerakoordinatensystem, und sie repräsentieren die Richtungen von der Kamera zu den Pixeln auf dem Bild.
     camera_dirs = (inverse_intrisics[None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
 
+    #directions sind die gleichen Richtungsvektoren, jedoch nach der Transformation in Weltkoordinaten, um die Szene zu repräsentieren.
     directions = (self.camtoworlds[:, None, None, :3, :3]
                   @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
 

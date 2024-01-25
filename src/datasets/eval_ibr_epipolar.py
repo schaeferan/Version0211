@@ -118,8 +118,10 @@ class EvalIBREpipolar(FFEpipolar):
           poses_copy, bds, self.cam_transform)
 
     i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
+    print("i_test: ", i_test)
     i_train = np.array(
         [i for i in np.arange(int(images.shape[0])) if i not in i_test])
+    print(i_train)
 
     if self.split == "train":
       indices = i_train

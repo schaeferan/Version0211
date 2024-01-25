@@ -137,7 +137,7 @@ class FFEpipolar(BaseDataset):
       #--------------------------------------------------------------------------------------
       # Get the reference data
       ref_images = self.images[batch_near_cam_idx]
-      ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 3)
+      ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 1)
       #ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 3)
 
       ref_cameratoworld = self.camtoworlds[batch_near_cam_idx]
@@ -157,7 +157,6 @@ class FFEpipolar(BaseDataset):
           min_depth=np.tile(self.min_depth[None, :], (l_devices, 1)),
           max_depth=np.tile(self.max_depth[None, :], (l_devices, 1)),
       )
-
       return_batch = data_types.Batch(
           target_view=target_view, reference_views=reference_views)
 
@@ -189,7 +188,7 @@ class FFEpipolar(BaseDataset):
 
     #if args.dataset.eval_dataset == "xray" :
     #    ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 1)
-    ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 3)
+    ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 1)
 
     ref_cameratoworld = self.train_camtoworlds[batch_near_cam_idx]
     ref_worldtocamera = self.train_worldtocamera[batch_near_cam_idx]

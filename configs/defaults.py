@@ -146,7 +146,7 @@ def get_model_config():
   # add a skip connection to the output vector of every
   # skip_layer layers.
   model_config.skip_layer = 4
-  model_config.num_rgb_channels = 3
+  model_config.num_rgb_channels = 1
   model_config.num_sigma_channels = 1
   model_config.randomized = False
 

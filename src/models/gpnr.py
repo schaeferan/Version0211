@@ -122,9 +122,9 @@ class GPNR(nn.Module):
       wcoords: The world coordinate for points along the query ray.
 
     Returns:
-      k_samples: key
-      k_samples_enc: encoded keys
-      k_mask: optional mask for keys
+      k_samples: key (batchsize, 6, 127, 6)
+      k_samples_enc: encoded keys (batchsize, 6, 127, 6)
+      k_mask: optional mask for keys (batchsize, 1)
       learned_embedding: learned embedding for reference view
     """
     k_samples, k_samples_enc, k_mask = self.lightfield.get_lf_encoding(
@@ -137,7 +137,7 @@ class GPNR(nn.Module):
         self.encoding_config.max_deg_point,
     )
     # wcoords_enc is of shape (B, P, EmbeddingDim). To concatenate to keys we
-    # need to broadcast it to (B, N, P, EmbeddingDim)
+    # need to broadcast it to (B, N, P, EmbeddingDim) Batch=num_rays, N=6, P=Num_proj_epi=127,E=63
     wcoords_enc = jnp.broadcast_to(
         wcoords_enc[:, None],
         k_samples_enc.shape[:-1] + (wcoords_enc.shape[-1],))
@@ -453,6 +453,7 @@ def construct_model(key, example_batch, args):
       return_attn=args.model.return_attn)
 
   key1, key2, key3 = random.split(key, num=3)
+  #key1 = random.split(key, num=1)
 
   init_variables = model.init(  # pylint: disable=no-member
       key1,
@@ -460,5 +461,10 @@ def construct_model(key, example_batch, args):
       rng_1=key3,
       batch=example_batch,
       randomized=args.model.randomized)
+
+  # init_variables = model.init(  # pylint: disable=no-member
+  #     key1,
+  #     batch=example_batch,
+  #     randomized=args.model.randomized)
 
   return model, init_variables
