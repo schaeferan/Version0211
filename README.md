@@ -1,3 +1,30 @@
+FLAGS für evaluation:
+
+--workdir=/home/andre/Schreibtisch/train_run4
+--is_train=False
+--ml_config=/home/andre/Dokumente/Master/gen_patch_neural_rendering/configs/defaults.py
+--ml_config.dataset.eval_xray_dir=/home/andre/Schreibtisch/eval_scenes_conrad_mini/scenes
+--ml_config.dataset.eval_length=8
+--ml_config.dataset.eval_dataset=xray
+--ml_config.dataset.batch_size=4
+--ml_config.lightfield.max_deg_point=4
+--ml_config.train.lr_init=3.0e-2
+--ml_config.train.warmup_steps=1
+--ml_config.train.max_steps=250
+--ml_config.train.num_epochs=2
+--ml_config.train.checkpoint_every_steps=10
+--ml_config.train.log_loss_every_steps=1
+--ml_config.train.render_every_steps=50
+--ml_config.eval.chunk=1024
+--ml_config.dataset.normalize=True
+--ml_config.model.init_final_precision=DEFAULT
+--ml_config.eval.eval_once=True
+
+
+
+
+
+
 # Generalizable Patch-Based Neural Rendering
 
 This is a JAX/Flax implementation of our ECCV-2022 oral paper "Generalizable Patch-Based Neural Rendering".
