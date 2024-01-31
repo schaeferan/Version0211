@@ -98,8 +98,13 @@ def get_train_scene_list(config):
   Returns:
     scene_path_list: list of scenes.
   """
+  # if config.dataset.name == "xray_epipolar":
+  #     scene_path_list = file_utils.listdir(config.dataset.xray_base_dir)
 
-  if config.dataset.name == "ff_epipolar":
+  if config.dataset.render_style == "xray":
+      scene_path_list = file_utils.listdir(config.dataset.xray_base_dir)
+
+  elif config.dataset.name == "ff_epipolar":
     corrupted_and_test_list = [
         "howardzhou_010_internal_drawing_vase", "howardzhou_059_narcissus",
         "howardzhou_087_yellow_chain_links",

@@ -60,7 +60,17 @@ def get_dataset_config():
   dataset_config = ml_collections.ConfigDict()
 
   # We set the base directories for different datasets here.
+  # --------------------------------------------------------
 
+  #dataset_config.name = "xray_epipolar"
+  dataset_config.scene = ""
+  dataset_config.xray_base_dir = ""
+  dataset_config.render_style = ""
+  dataset_config.xray_image_height = 976
+  dataset_config.xray_image_width = 976
+  dataset_config.XML_dir = ""
+
+  # --------------------------------------------------------
   dataset_config.name = "ff_epipolar"
   dataset_config.scene = ""
   #--------------------------------------------------------
@@ -146,7 +156,7 @@ def get_model_config():
   # add a skip connection to the output vector of every
   # skip_layer layers.
   model_config.skip_layer = 4
-  model_config.num_rgb_channels = 1
+  model_config.num_rgb_channels = 3
   model_config.num_sigma_channels = 1
   model_config.randomized = False
 

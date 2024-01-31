@@ -61,7 +61,10 @@ def listdir(pth):
         list: List of file and subdirectory names in the directory.
 
   """
-  return os.listdir(pth)
+  liste_amk = os.listdir(pth)
+  print(liste_amk)
+
+  return liste_amk
 
 
 def isdir(pth):

@@ -251,9 +251,14 @@ def train_and_evaluate(config, workdir):
   #Anschließend wird eine Liste von Szenenpfaden (scene_path_list) mit Hilfe von Hilfsfunktionen erstellt. D
   #Diese Pfade werden für die Erstellung des Trainingsdatensatzes verwendet.
   scene_path_list = train_utils.get_train_scene_list(config)
-  print(scene_path_list[0])
+  print("scene path list: ", scene_path_list[0])
   train_ds = datasets.create_train_dataset(config, scene_path_list[0])
+  print("created train_ds")
+
+  #config.dataset.render_style == "neu"
+
   _, eval_ds_dict = datasets.create_eval_dataset(config)
+  print("created eval_ds")
   _, eval_ds = eval_ds_dict.popitem()
   example_batch = train_ds.peek()
 

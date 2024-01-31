@@ -37,7 +37,7 @@ class EvalIBREpipolar(FFEpipolar):
     Args:
         args: Experiment configuration.
     """
-
+    print("load renderings von EvalIBRE aufgerufen")
     #-------------------------------------------
     # Load images.
     #-------------------------------------------
@@ -121,14 +121,18 @@ class EvalIBREpipolar(FFEpipolar):
     print("i_test: ", i_test)
     i_train = np.array(
         [i for i in np.arange(int(images.shape[0])) if i not in i_test])
-    print(i_train)
+    print("i_train: ", i_train)
 
     if self.split == "train":
       indices = i_train
     else:
       indices = i_test
+
     images = images[indices]
+    print(images.shape)
+
     poses = poses[indices]
+    print(poses.shape)
 
     self.images = images
     self.camtoworlds = poses[:, :3, :4]

@@ -78,9 +78,7 @@ def create_eval_dataset(args):
     eval_ds_list = {}
     if not args.dataset.eval_scene:
       print("61")
-      scene_list = [
-          "fern"]#, "flower", "fortress", "horns", "leaves", "orchids", "room", "trex"
-      #]
+      scene_list = ["fern"]#, "flower", "fortress", "horns", "leaves", "orchids", "room", "trex"]
     else:
       print("66")
       scene_list = [args.dataset.eval_scene]
@@ -92,7 +90,9 @@ def create_eval_dataset(args):
     for scene in scene_list:
       logging.info("Loading eval scene {} ===============".format(scene))  # pylint: disable=logging-format-interpolation
       train_ds = eval_ibr_epipolar.EvalIBREpipolar("train", args, scene)
+      print("eval_ds: train_ds created")
       eval_ds = eval_ibr_epipolar.EvalIBREpipolar("test", args, scene, train_ds)
+      print("eval_ds: test_ds created")
       eval_ds_list[scene] = eval_ds
 
   elif args.dataset.eval_dataset == "shiny-6":
@@ -125,7 +125,9 @@ def create_eval_dataset(args):
       logging.info("Loading eval scene {} ===============".format(scene))  # pylint: disable=logging-format-interpolation
 
       train_ds = eval_xray_epipolar.EvalXRAYEpipolar("train", args, scene)
+      print("eval_ds: train_ds created")
       eval_ds = eval_xray_epipolar.EvalXRAYEpipolar("test", args, scene, train_ds)
+      print("eval_ds: test_ds created")
 
       eval_ds_list[scene] = eval_ds
 

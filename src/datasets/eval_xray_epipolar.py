@@ -28,10 +28,12 @@ class EvalXRAYEpipolar(FFEpipolar):
     Args:
         args: Experiment configuration.
     """
+    print("load renderings von EvalXRAY wird aufgerufen")
     ####################################################################################################################
 
     #xml_file_path = '/home/andre/CONRAD_data/Conrad_base.xml'
-    xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
+    #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
+    xml_file_path = args.dataset.XML_dir
 
     projection_matrices = parse_projection_matrices(xml_file_path)
     projection_matrices = projection_matrices[:args.dataset.eval_length]
@@ -57,11 +59,12 @@ class EvalXRAYEpipolar(FFEpipolar):
     # Transpose such that the first dimension is number of images
     images = np.moveaxis(images, -1, 0)
 
-    # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
-    # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
-    #images = np.expand_dims(images, axis=-1)
-    # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
-    #images = np.repeat(images, 3, axis=-1)
+    if args.model.num_rgb_channels == 3:
+      # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
+      # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
+      images = np.expand_dims(images, axis=-1)
+      # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
+      images = np.repeat(images, 3, axis=-1)
 
     images = images.astype(np.uint8)
 
@@ -160,8 +163,10 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     # Select the split.
     i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
+    print("i_test: ", i_test)
     i_train = np.array(
       [i for i in np.arange(int(images.shape[0])) if i not in i_test])
+    print("i_train: ", i_train)
 
     if self.split == "train":
       indices = i_train
@@ -169,7 +174,9 @@ class EvalXRAYEpipolar(FFEpipolar):
       indices = i_test
 
     images = images[indices]
+    print(images.shape)
     camtoworlds = camtoworlds[indices]
+    print(camtoworlds.shape)
     projection_matrices = np.array(projection_matrices)
     projection_matrices = projection_matrices[indices]
 

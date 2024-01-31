@@ -47,7 +47,7 @@ class BaseDataset(threading.Thread):
 
     self.use_pixel_centers = args.dataset.use_pixel_centers
     if split == "train":
-      self._train_init(args)
+      self._train_init(args)#load renderings von der Eval klasse für train
     elif split == "test":
       self._test_init(args)
     else:
@@ -121,14 +121,22 @@ class BaseDataset(threading.Thread):
     Args:
         args: Experiment configuration.
     """
-    self._load_renderings(args)
-    self._generate_rays()
+    if args.dataset.render_style == "xray":
+      self._load_renderings_xray(args)# für das große train set für training
+      self._generate_rays()
+      args.dataset.render_style = "stop" #damit load_renderings_xray beim zweiten mal nicht nochmal aufgerufen wird
+    else:
+      self._load_renderings(args)#für das kleine "train" set für evaluation
+      self._generate_rays()
+
+    # self._load_renderings(args)
+    # self._generate_rays()
 
     if args.dataset.batching == "single_image":
 
       if args.dataset.eval_dataset == "xray":
 
-        self.images = self.images.reshape([-1, self.resolution, 1])#shape 3 ????
+        self.images = self.images.reshape([-1, self.resolution, 3])#args.config.model.num_rgb_channels])#shape 3 ????
         self.rays = jax.tree_map(
           lambda r: r.reshape([-1, self.resolution, r.shape[-1]]), self.rays)
 
@@ -196,6 +204,16 @@ class BaseDataset(threading.Thread):
       return data_types.Batch(target_view=target_view)
 
   def _load_renderings(self, args):
+    """
+    Load renderings for the dataset.
+
+    Args:
+        args: Experiment configuration.
+    """
+
+    raise NotImplementedError
+
+  def _load_renderings_xray(self, args):
     """
     Load renderings for the dataset.
 

@@ -25,6 +25,7 @@ if not INTERNAL:
 #import imageio
 import imageio.v2 as imageio
 import jax
+import re
 import numpy as np
 from skimage import io
 from skimage.color import rgb2gray
@@ -35,6 +36,7 @@ from gen_patch_neural_rendering.src.utils import data_types
 from gen_patch_neural_rendering.src.utils import file_utils
 from gen_patch_neural_rendering.src.utils import pose_utils
 
+from gen_patch_neural_rendering.src.datasets.XML_loader import parse_projection_matrices, analyze_xml_file
 
 class FFEpipolar(BaseDataset):
   """Forward Facing epipolar dataset."""
@@ -137,7 +139,7 @@ class FFEpipolar(BaseDataset):
       #--------------------------------------------------------------------------------------
       # Get the reference data
       ref_images = self.images[batch_near_cam_idx]
-      ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 1)
+      ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 3)
       #ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 3)
 
       ref_cameratoworld = self.camtoworlds[batch_near_cam_idx]
@@ -188,7 +190,7 @@ class FFEpipolar(BaseDataset):
 
     #if args.dataset.eval_dataset == "xray" :
     #    ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 1)
-    ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 1)
+    ref_images = ref_images.reshape(ref_images.shape[0], self.h, self.w, 3)
 
     ref_cameratoworld = self.train_camtoworlds[batch_near_cam_idx]
     ref_worldtocamera = self.train_worldtocamera[batch_near_cam_idx]
@@ -241,12 +243,13 @@ class FFEpipolar(BaseDataset):
 
 
 
-      if not file_utils.file_exists(imgdir):
-          raise ValueError("Image folder {} doesn't exist.".format(imgdir))
+      # if not file_utils.file_exists(imgdir):
+      #     raise ValueError("Image folder {} doesn't exist.".format(imgdir))
 
       imgfiles = [
           path.join(imgdir, f)
-          for f in sorted(file_utils.listdir(imgdir))
+          #for f in sorted(file_utils.listdir(imgdir))
+          for f in sorted(file_utils.listdir(imgdir), key=lambda x: int(re.search(r'\d+', x).group()))
           if f.endswith(".tif")  # Filtern Sie .tif-Dateien
       ]
 
@@ -300,8 +303,6 @@ class FFEpipolar(BaseDataset):
         with file_utils.open_file(fs) as f:
           return imageio.imread(f)
 
-
-
     def load_single_image(f):
       return cv2.resize(imread(f)[Ellipsis, :3], dsize=(w, h))
 
@@ -318,10 +319,156 @@ class FFEpipolar(BaseDataset):
     images = np.stack(images, axis=-1)
     return images
 
+  def _load_renderings_xray(self, args):
 
+      print("load renderings von FFEpi für Big train (XRAY version)")
+      """
+          Load images and camera information for evaluation.
+
+          Args:
+              args: Experiment configuration.
+          """
+      ####################################################################################################################
+
+      # xml_file_path = '/home/andre/CONRAD_data/Conrad_base.xml'
+      #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
+      xml_file_path = args.dataset.XML_dir
+
+      projection_matrices = parse_projection_matrices(xml_file_path)
+      projection_matrices = projection_matrices[args.dataset.eval_length:]
+      #projection_matrices = projection_matrices[:args.dataset.eval_length]
+      # self.projection_matrices = np.array(projection_matrices)
+
+      XML_dict = analyze_xml_file(xml_file_path)
+      self.XML_dict = XML_dict
+
+      ## Überprüfen resultierenden Dictionary
+      # if result_dict is not None:
+      # for key, value in result_dict.items():
+      # print(f"{key}: {value}")
+
+      # Bilder laden #####################################################################################################
+
+      basedir = path.join(args.dataset.xray_base_dir, self.scene)
+
+      img0 = [
+          os.path.join(basedir, "images", f)
+          for f in sorted(file_utils.listdir(os.path.join(basedir, "images")))
+          if f.endswith("tif")
+      ][0]
+
+      assert Path(img0).is_file()
+
+      with file_utils.open_file(img0, 'rb') as f:
+          # sh = imageio.imread(f).shape
+          img = imageio.imread(f)
+          sh = img.shape
+      if sh[0] / sh[
+          1] != args.dataset.xray_image_height / args.dataset.xray_image_width:
+          raise ValueError("not expected height width ratio")
+
+      imgdir = os.path.join(basedir, "images")
+
+      #xray_image_width = 976
+      #xray_image_height = 976
+
+      images = self._load_images_tif(imgdir, args.dataset.xray_image_height,
+                                     args.dataset.xray_image_height)
+      print("images shape: ", images.shape)
+
+      # Transpose such that the first dimension is number of images
+      images = np.moveaxis(images, -1, 0)
+
+      # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
+      # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
+      images = np.expand_dims(images, axis=-1)
+      # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
+      images = np.repeat(images, 3, axis=-1)
+
+      images = images.astype(np.uint8)
+
+      self.h, self.w = images.shape[1:3]
+      self.resolution = self.h * self.w
+      self.images = images
+      self.focal = 3934.43
+
+      self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
+                                        [0, 3934.43, 488, 0],
+                                        [0, 0, 1, 0]]).astype(np.float32)
+      extrinsic_matrices = []
+      for P in projection_matrices:
+          K = self.intrinsic_matrix[:, :3]
+          # Zerlege die Projektionsmatrix P in [R | t]
+          K_inverse = np.linalg.inv(K)
+          [R, t] = np.dot(K_inverse, P)[:3, :].copy(), np.dot(K_inverse, P)[:3, 3].copy()
+
+          extrinsic_matrices.append(R)
+
+      extrinsics_array = np.array(extrinsic_matrices)
+      camtoworlds = extrinsics_array
+
+      # Get the min and max depth of the scene
+      self.min_depth = 420
+      self.max_depth = 820
+
+      # self.min_depth = (self.min_depth,)
+      # self.max_depth = (self.max_depth,)
+
+      self.min_depth = np.array([self.min_depth])
+      self.max_depth = np.array([self.max_depth])
+
+      min = self.min_depth.item()
+      max = self.max_depth.item()
+
+      args.model.near = min
+      args.model.far = max
+
+      # # # Select the split.
+      # # i_train = np.arange(images.shape[0])
+      # # i_test = np.array([0])
+      #
+      # # Select the split.
+      # i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
+      # print(i_test)
+      # i_train = np.array(
+      #     [i for i in np.arange(int(images.shape[0])) if i not in i_test])
+      # print(i_train)
+      #
+      # if self.split == "train":
+      #     indices = i_train
+      # else:
+      #     indices = i_test
+      #
+      # if self.split == "test":
+      #     self.render_poses = pose_utils.generate_spiral_poses(
+      #         poses, bds, self.cam_transform)
+
+      # Select the split.
+      i_train = np.arange(images.shape[0])
+      i_test = np.array([0])
+
+      if self.split == "train":
+          indices = i_train
+      else:
+          indices = i_test
+
+      images = images[indices]
+      print("images shape[0]: ", images.shape[0])
+
+      camtoworlds = camtoworlds[indices]
+      print("poses shape[0]: ", camtoworlds.shape[0])
+
+      projection_matrices = np.array(projection_matrices)
+      projection_matrices = projection_matrices[indices]
+
+      self.images = images
+      self.camtoworlds = camtoworlds
+      self.projection_matrices = projection_matrices
+
+      self.n_examples = images.shape[0]
   def _load_renderings(self, args):
     """Load images and camera information."""
-
+    print("load renderings von FFEpi für Big train (normale version)")
     #-------------------------------------------
     # Load images.
     #-------------------------------------------
@@ -353,6 +500,7 @@ class FFEpipolar(BaseDataset):
 
     images = self._load_images(imgdir, args.dataset.ff_image_width,
                                args.dataset.ff_image_height)
+    print("images shape: ", images.shape)
 
     #-------------------------------------------
     # Load poses and bds.
@@ -399,7 +547,7 @@ class FFEpipolar(BaseDataset):
     if self.split == "test":
       self.render_poses = pose_utils.generate_spiral_poses(
           poses, bds, self.cam_transform)
-
+########################################################################################################################
     # Select the split.
     i_train = np.arange(images.shape[0])
     i_test = np.array([0])
@@ -410,9 +558,12 @@ class FFEpipolar(BaseDataset):
       indices = i_test
 
     images = images[indices]
+    print("images shape[0]: ", images.shape[0])
     poses = poses[indices]
+    print("poses shape[0]: ", poses.shape[0])
 
     self.images = images
+
     self.camtoworlds = poses[:, :3, :4]
 
     # intrinsic arr has H, W, fx, fy, cx, cy
