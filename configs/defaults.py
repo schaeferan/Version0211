@@ -243,7 +243,7 @@ def get_train_config():
   # The gradient clipping magnitude (disabled if == 0).
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
-  train_config.max_steps = 250000
+  train_config.max_steps = 40000#250000
   train_config.num_epochs = 180
   train_config.checkpoint_every_steps = 1000
   train_config.log_loss_every_steps = 500
@@ -266,7 +266,7 @@ def get_eval_config():
   eval_config.save_output = True
   # the size of chunks for evaluation inferences,
   # set to the value that fits your GPU/TPU memory.
-  eval_config.chunk = 4096
+  eval_config.chunk = 64#4096
   eval_config.inference = False
 
   eval_config.mvsn_style = False

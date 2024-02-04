@@ -21,7 +21,7 @@ class EvalXRAYEpipolar(FFEpipolar):
   """Forward Facing epipolar dataset for medical xray images."""
 
 
-  def _load_renderings(self, args):
+  def _load_renderings_xray(self, args):
     """
     Load images and camera information for evaluation.
 

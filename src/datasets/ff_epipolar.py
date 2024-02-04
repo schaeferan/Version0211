@@ -335,7 +335,7 @@ class FFEpipolar(BaseDataset):
       xml_file_path = args.dataset.XML_dir
 
       projection_matrices = parse_projection_matrices(xml_file_path)
-      projection_matrices = projection_matrices[args.dataset.eval_length:]
+      projection_matrices = projection_matrices[args.dataset.eval_length:10]
       #projection_matrices = projection_matrices[:args.dataset.eval_length]
       # self.projection_matrices = np.array(projection_matrices)
 
@@ -555,6 +555,7 @@ class FFEpipolar(BaseDataset):
     if self.split == "train":
       indices = i_train
     else:
+      print("ff_epipolar.py split == test")
       indices = i_test
 
     images = images[indices]

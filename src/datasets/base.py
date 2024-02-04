@@ -47,8 +47,10 @@ class BaseDataset(threading.Thread):
 
     self.use_pixel_centers = args.dataset.use_pixel_centers
     if split == "train":
+      print("split == train")
       self._train_init(args)#load renderings von der Eval klasse für train
     elif split == "test":
+      print("split == test")
       self._test_init(args)
     else:
       raise ValueError(
@@ -121,13 +123,22 @@ class BaseDataset(threading.Thread):
     Args:
         args: Experiment configuration.
     """
-    if args.dataset.render_style == "xray":
-      self._load_renderings_xray(args)# für das große train set für training
-      self._generate_rays()
-      args.dataset.render_style = "stop" #damit load_renderings_xray beim zweiten mal nicht nochmal aufgerufen wird
-    else:
-      self._load_renderings(args)#für das kleine "train" set für evaluation
-      self._generate_rays()
+    # if args.dataset.render_style == "xray":
+    #   #if self.split == "train":
+    #   self._load_renderings_xray(args)# für das große train set für training
+    #   self._generate_rays()
+    #   #args.dataset.render_style = "stop" #damit load_renderings_xray beim zweiten mal nicht nochmal aufgerufen wird
+    # else:
+    #   self._load_renderings(args)#für das kleine "train" set für evaluation
+    #   self._generate_rays()
+
+
+
+    self._load_renderings_xray(args)# für das große train set für training
+    self._generate_rays()
+      #
+      # self._load_renderings(args)#für das kleine "train" set für evaluation
+      # self._generate_rays()
 
     # self._load_renderings(args)
     # self._generate_rays()
@@ -156,7 +167,7 @@ class BaseDataset(threading.Thread):
     Args:
         args: Experiment configuration.
     """
-    self._load_renderings(args)
+    self._load_renderings_xray(args)
     self._generate_rays()
     self.it = 0
 
