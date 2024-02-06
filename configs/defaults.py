@@ -277,6 +277,7 @@ def get_eval_config():
 
 
 def get_hyper(h):
+  print("SWEEP")
   """
   Get hyperparameters for sweeping experiments.
 

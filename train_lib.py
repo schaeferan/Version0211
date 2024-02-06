@@ -268,6 +268,7 @@ def train_and_evaluate(config, workdir):
   ##################################################################################################################
   #----------------------------------------------------------------------------
   "#Schritt 5: Berechnen der Anzahl der Trainingsschritte basierend auf der Konfiguration."
+  print("STEP 5")
   # Learning rate schedule.
   num_train_steps = config.train.max_steps
   #Wenn config.train.max_steps den Wert -1 hat, bedeutet dies, dass keine spezifische Anzahl von Trainingsschritten festgelegt wurde.
@@ -283,6 +284,7 @@ def train_and_evaluate(config, workdir):
 
   #----------------------------------------------------------------------------
   "#Schritt 7: Initialisieren des Modells und Laden von Checkpoints, falls vorhanden."
+  print("STEP 7")
   # Initialize model.
   rng, model_rng = jax.random.split(rng)
   model, state = models.create_train_state(
@@ -313,6 +315,7 @@ def train_and_evaluate(config, workdir):
 
   #----------------------------------------------------------------------------
   "#Schritt 8: Verteilung des Trainings auf mehrere Geräte."
+  print("STEP 8")
   # Distribute training.
   #Zunächst wird der Trainingszustand state mit Hilfe der Funktion flax_utils.replicate() auf alle verfügbaren Geräte repliziert.
   #Dadurch wird der Zustand auf jedes Gerät dupliziert, um das Training parallel auf mehreren Geräten durchführen zu können.
@@ -339,6 +342,7 @@ def train_and_evaluate(config, workdir):
 ######################################################################################################################
 
   "#Schritt 9: Abrufen der Rendering-Funktion für die Evaluation."
+  print("STEP 9")
   # Get distributed rendering function
   render_pfn = render_utils.get_render_function(
       model=model,
@@ -366,6 +370,7 @@ def train_and_evaluate(config, workdir):
 ######################################################################################################################
 
   "#Schritt 11: Starten der Trainingsschleife."
+  print("Step 11")
   logging.info("Starting training loop at step %d.", initial_step)
   hooks = []
   report_progress = periodic_actions.ReportProgress(
@@ -380,6 +385,7 @@ def train_and_evaluate(config, workdir):
 ######################################################################################################################
 
   "#Schritt 12: Vorbereiten des Trainingsdatensatzes für die Geräte."
+  print("Step 12")
   # Prefetch_buffer_size = 6 x batch_size
   ptrain_ds = flax.jax_utils.prefetch_to_device(train_ds, 6)#helps to improve training performance by overlapping data loading and computation.
   n_local_devices = jax.local_device_count()#This indicates the number of devices available for training.
@@ -389,6 +395,7 @@ def train_and_evaluate(config, workdir):
 #######################################################################################################################
 
   "#Schritt 13: Schleife über die Trainings-Steps."
+  print("Step13")
 
   #with statement to ensure that the metric writer's buffers are flushed at the end of each iteration.
   with metric_writers.ensure_flushes(writer):
@@ -399,6 +406,7 @@ def train_and_evaluate(config, workdir):
 ###################################################################################################################
 
       "#Schritt 14: Überprüfen, ob ein Szenenwechsel stattfinden soll."
+      print("Step 14")
       if step % step_per_scene == 0:
         scene_idx = np.random.randint(len(scene_path_list))
         logging.info("Loading scene {}".format(scene_path_list[scene_idx]))  # pylint: disable=logging-format-interpolation
@@ -415,6 +423,7 @@ def train_and_evaluate(config, workdir):
       #This allows for profiling and tracing the execution of the training step.
       with jax.profiler.StepTraceAnnotation("train", step_num=step):
         "#Schritt 16: Ausführen eines Trainingsschritts."
+        print("Step 16")
         batch = next(ptrain_ds)
         state, metrics_update, keys = p_train_step(
             rng=keys, state=state, batch=batch)
@@ -439,6 +448,7 @@ def train_and_evaluate(config, workdir):
         #Das Objekt train_metrics wird auf None zurückgesetzt, um es auf die nächsten Metriken vorzubereiten.
         train_metrics = None
      ###################################################################################################################
+      print("Step 18")
       #Schritt 18: Ausführen einer Evaluation.
       if step % config.train.render_every_steps == 0 or is_last_step:
         test_batch = next(eval_ds)
@@ -458,7 +468,7 @@ def train_and_evaluate(config, workdir):
         #wie z.B. das Speichern von Metriken, das Schreiben von Protokollen oder das Erstellen von visuellen Darstellungen. Die anderen Hosts konzentrieren sich hauptsächlich auf die Berechnung der Schritte und den Austausch von Parametern.
         #Durch die Beschränkung des Loggings auf Host 0 wird sichergestellt, dass die Evaluationsergebnisse nur einmal erfasst und gespeichert werden, was effizienter ist und den Arbeitsaufwand verringert.
 
-
+        print("Step 19")
         #Schritt 19: Logging der Evaluationsergebnisse für Host 0.
         #------------------------------------------------------------------
         #Die Bedingung jax.process_index() == 0 überprüft, ob der aktuelle Host den Index 0 hat.
