@@ -171,30 +171,36 @@ def render_image(
         for x in chunk_results
         if x is not None
     ])
+    #print(results)
     # pylint: enable=cell-var-from-loop
   # The light field model only returns the rgb values,
   # the disparity and acc fields are None. NeRF returns all three values.
   # The if condition below handles the two cases.
 
+  ##Disparity: This represents the difference or shift in position between corresponding points in a stereo pair of images, often used for depth estimation.
+  ##Accumulation Fields: These are additional fields that store accumulated information about the light transport or radiance. They can be used for various purposes,
+  ##such as accumulating color contributions from different rays or viewpoints, accumulating samples for anti-aliasing or denoising, or storing intermediate results during rendering.
+
   if len(results[0]) == 3:
-    print("render_utils:180")
+    print("render_utils:180 disp rgb acc")
     rgb, disp, acc = [jnp.concatenate(r, axis=0) for r in zip(*results)]
     # Normalize disp for visualization for ndc_rays in llff front-facing scenes.
     if normalize_disp:
       disp = (disp - disp.min()) / (disp.max() - disp.min())
     ret = (rgb.reshape((height, width, -1)), disp.reshape(
         (height, width, -1)), acc.reshape((height, width, -1)))
+
   elif len(results[0]) == 2:
-    print("render_utils:188")
+    print("render_utils:188 rgb and depth?")
     # return the rgb values and the depth
     rgb, disp = [jnp.concatenate(r, axis=0) for r in zip(*results)]
     # Normalize disp for visualization for ndc_rays in llff front-facing scenes.
     if normalize_disp:
       disp = (disp - disp.min()) / (disp.max() - disp.min())
-    ret = (rgb.reshape((height, width, -1)), disp.reshape(height, width,
-                                                          -1), None)
+    ret = (rgb.reshape((height, width, -1)), disp.reshape(height, width, -1), None)
+
   elif len(results[0]) == 1:
-    print("render_utils:197")
+    print("render_utils:197 rgb")
     rgb = [jnp.concatenate(r, axis=0) for r in zip(*results)][0]
     ret = (rgb.reshape((height, width, -1)), None, None)
 

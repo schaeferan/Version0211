@@ -122,7 +122,7 @@ def get_dataset_config():
   # If True, generate rays through the center of each pixel.
   # Note: While this is the correct way to handle rays, it
   # is not the way rays are handled in the original NeRF paper.
-  dataset_config.use_pixel_centers = False
+  dataset_config.use_pixel_centers = True #vorher False
   # to store height and width
 
   dataset_config.normalize = True
@@ -172,6 +172,7 @@ def get_model_config():
   model_config.sigma_activation = "relu"
 
   model_config.white_bkgd = False
+  #bedeutet höchstwahrscheinlich, dass die Hintergrundfarbe des Modells nicht auf Weiß gesetzt ist
 
   #------------------------------------
   # For Transformer
@@ -231,7 +232,7 @@ def get_train_config():
   train_config.switch_scene_iter = 500
   train_config.scheduler = "linear"
   train_config.lr_init = 2.0e-3
-  train_config.warmup_epochs = 2
+  train_config.warmup_epochs = 1
   train_config.weight_decay = 0.
   train_config.warmup_steps = 2500
   train_config.lr_final = 2.0e-5
@@ -243,7 +244,7 @@ def get_train_config():
   # The gradient clipping magnitude (disabled if == 0).
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
-  train_config.max_steps = 40000#250000
+  train_config.max_steps = 250000
   train_config.num_epochs = 180
   train_config.checkpoint_every_steps = 1000
   train_config.log_loss_every_steps = 500

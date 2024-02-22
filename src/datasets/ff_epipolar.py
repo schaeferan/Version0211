@@ -250,7 +250,7 @@ class FFEpipolar(BaseDataset):
           path.join(imgdir, f)
           #for f in sorted(file_utils.listdir(imgdir))
           for f in sorted(file_utils.listdir(imgdir), key=lambda x: int(re.search(r'\d+', x).group()))
-          if f.endswith(".tif")  # Filtern Sie .tif-Dateien
+          #if f.endswith(".tif")  # Filtern Sie .tif-Dateien
       ]
 
       images = [load_single_image(f) for f in imgfiles]
@@ -335,7 +335,7 @@ class FFEpipolar(BaseDataset):
       xml_file_path = args.dataset.XML_dir
 
       projection_matrices = parse_projection_matrices(xml_file_path)
-      projection_matrices = projection_matrices[args.dataset.eval_length:10]
+      #projection_matrices = projection_matrices[9:11]
       #projection_matrices = projection_matrices[:args.dataset.eval_length]
       # self.projection_matrices = np.array(projection_matrices)
 

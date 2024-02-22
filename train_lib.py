@@ -309,6 +309,7 @@ def train_and_evaluate(config, workdir):
   initial_step = int(state.step) + 1
   step_per_scene = config.train.switch_scene_iter#wie oft eine Szene gewechselt wird.
   if config.dev_run:
+    print("config.dev_run==TRUE")
     jnp.set_printoptions(precision=2)
     np.set_printoptions(precision=2)
     step_per_scene = 3
@@ -406,7 +407,7 @@ def train_and_evaluate(config, workdir):
 ###################################################################################################################
 
       "#Schritt 14: Überprüfen, ob ein Szenenwechsel stattfinden soll."
-      print("Step 14")
+      #print("Step 14")
       if step % step_per_scene == 0:
         scene_idx = np.random.randint(len(scene_path_list))
         logging.info("Loading scene {}".format(scene_path_list[scene_idx]))  # pylint: disable=logging-format-interpolation
@@ -423,7 +424,7 @@ def train_and_evaluate(config, workdir):
       #This allows for profiling and tracing the execution of the training step.
       with jax.profiler.StepTraceAnnotation("train", step_num=step):
         "#Schritt 16: Ausführen eines Trainingsschritts."
-        print("Step 16")
+        #print("Step 16")
         batch = next(ptrain_ds)
         state, metrics_update, keys = p_train_step(
             rng=keys, state=state, batch=batch)
@@ -448,7 +449,7 @@ def train_and_evaluate(config, workdir):
         #Das Objekt train_metrics wird auf None zurückgesetzt, um es auf die nächsten Metriken vorzubereiten.
         train_metrics = None
      ###################################################################################################################
-      print("Step 18")
+      #print("Step 18")
       #Schritt 18: Ausführen einer Evaluation.
       if step % config.train.render_every_steps == 0 or is_last_step:
         test_batch = next(eval_ds)
