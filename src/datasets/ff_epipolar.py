@@ -260,8 +260,11 @@ class FFEpipolar(BaseDataset):
       min_value = np.min(images)
       max_value = np.max(images)
 
-      # Skaliere alle Bilder im Bezug auf den globalen Mindest- und Maximalwert
-      scaled_images = (images - min_value) / (max_value - min_value) * 255
+      ## Grauwerte
+      ## Skaliere alle Bilder im Bezug auf den globalen Mindest- und Maximalwert
+      #scaled_images = (images - min_value) / (max_value - min_value) * 255
+
+      scaled_images = images / max_value
 
       # test = images[0]
       #
@@ -407,9 +410,30 @@ class FFEpipolar(BaseDataset):
       extrinsics_array = np.array(extrinsic_matrices)
       camtoworlds = extrinsics_array
 
+      # Convert R matrix from the form [up forward left] to [right up back]
+      camtoworlds = np.concatenate(
+          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+
       # Get the min and max depth of the scene
       self.min_depth = 420
       self.max_depth = 820
+
+      scale = 1 / self.max_depth
+
+      camtoworlds[:, :3, 3] *= scale
+
+      # Transformation der Kamerakoordinaten definieren
+      self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
+                                     [0, 0, 0, 1]])
+      self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+
+      # bds *= scale
+      camtoworlds_copy = camtoworlds.copy()
+      camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+      camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+
+      self.min_depth = scale * self.min_depth
+      self.max_depth = scale * self.max_depth
 
       # self.min_depth = (self.min_depth,)
       # self.max_depth = (self.max_depth,)

@@ -132,9 +132,11 @@ class BaseDataset(threading.Thread):
     #   self._load_renderings(args)#für das kleine "train" set für evaluation
     #   self._generate_rays()
 
-
-
-    self._load_renderings_xray(args)# für das große train set für training
+    if args.dataset.eval_dataset == "xray":
+      self._load_renderings_xray(args)# für das große train set für training
+    else:
+      self._load_renderings(args)
+    #print("für das große train set für training")
     self._generate_rays()
       #
       # self._load_renderings(args)#für das kleine "train" set für evaluation
@@ -167,7 +169,11 @@ class BaseDataset(threading.Thread):
     Args:
         args: Experiment configuration.
     """
-    self._load_renderings_xray(args)
+    if args.dataset.eval_dataset == "xray":
+      self._load_renderings_xray(args)
+    else:
+      self._load_renderings(args)
+
     self._generate_rays()
     self.it = 0
 

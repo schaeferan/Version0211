@@ -122,11 +122,11 @@ def get_dataset_config():
   # If True, generate rays through the center of each pixel.
   # Note: While this is the correct way to handle rays, it
   # is not the way rays are handled in the original NeRF paper.
-  dataset_config.use_pixel_centers = True #vorher False
+  dataset_config.use_pixel_centers = False #vorher False
   # to store height and width
 
   dataset_config.normalize = True
-  dataset_config.num_interpolation_views = 10
+  dataset_config.num_interpolation_views = 10#self.num_ref_views
 
   # For generalization evaluation
   dataset_config.eval_dataset = "llff"
@@ -188,14 +188,14 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 127
+  model_config.num_projections = 127 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
   model_config.return_attn = False
 
   model_config.init_final_precision = "DEFAULT"
-  model_config.normalize_ref_image = False
+  model_config.normalize_ref_image = True
 
   # Predict RGB from interpolated features.
   model_config.predict_feature_rgb = True

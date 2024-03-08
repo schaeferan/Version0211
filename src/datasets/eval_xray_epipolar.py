@@ -50,11 +50,30 @@ class EvalXRAYEpipolar(FFEpipolar):
     # Bilder laden #####################################################################################################
 
     basedir = path.join(args.dataset.eval_xray_dir, self.scene)
+
+#    img0 = [
+#        os.path.join(basedir, "images", f)
+#        for f in sorted(file_utils.listdir(os.path.join(basedir, "images")))
+#        if f.endswith("JPG") or f.endswith("jpg") or f.endswith("png")
+#    ][0]
+#    with file_utils.open_file(img0) as f:
+#      sh = imageio.imread(f).shape
+#    if sh[0] / sh[
+#        1] != args.dataset.ff_image_height / args.dataset.ff_image_width:
+#      raise ValueError("not expected height width ratio")
+
+#    factor = 1
+#    #factor = sh[0] / args.dataset.ff_image_height
+
     imgdir = basedir
 
+    height = 976#args.dataset.ff_image_height
+    width = 976#args.dataset.ff_image_width
 
-    images = self._load_images_tif(imgdir, args.dataset.eval_xray_image_width,
-                               args.dataset.eval_xray_image_height)
+    images = self._load_images_tif(imgdir, width, height)
+
+    #images = self._load_images_tif(imgdir, args.dataset.eval_xray_image_width,
+    #                           args.dataset.eval_xray_image_height)
 
     # Transpose such that the first dimension is number of images
     images = np.moveaxis(images, -1, 0)
@@ -137,6 +156,11 @@ class EvalXRAYEpipolar(FFEpipolar):
 
 ########################################################################################################################
 
+    # Convert R matrix from the form [up forward left] to [right up back]
+    camtoworlds = np.concatenate(
+        [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+
+
     # # Use this to set the near and far plane
     # args.model.near = self.min_depth.item()
     # args.model.far = self.max_depth.item()
@@ -144,6 +168,34 @@ class EvalXRAYEpipolar(FFEpipolar):
     # Get the min and max depth of the scene
     self.min_depth = 420
     self.max_depth = 820
+
+    scale = 1/self.max_depth
+
+    camtoworlds[:, :3, 3] *= scale
+
+    # Transformation der Kamerakoordinaten definieren
+    self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
+                                   [0, 0, 0, 1]])
+    self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+
+    #bds *= scale
+    camtoworlds_copy = camtoworlds.copy()
+    camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+    camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+
+    factor_h = 976 / height
+    factor_w = 976 / width
+
+    # Passe die Breite entsprechend an
+    self.intrinsic_matrix[0, 0] /= factor_w  # Fokallänge in x-Richtung
+    self.intrinsic_matrix[0, 2] /= factor_w  # Hauptpunkt in x-Richtung
+
+    # Passe die Höhe entsprechend an
+    self.intrinsic_matrix[1, 1] /= factor_h  # Fokallänge in y-Richtung
+    self.intrinsic_matrix[1, 2] /= factor_h  # Hauptpunkt in y-Richtung
+
+    self.min_depth = scale * self.min_depth
+    self.max_depth = scale * self.max_depth
 
     #self.min_depth = (self.min_depth,)
     #self.max_depth = (self.max_depth,)

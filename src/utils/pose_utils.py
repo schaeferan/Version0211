@@ -29,8 +29,6 @@ def recenter_poses(poses, cam_transform=None):
       Returns:
           np.ndarray: Recentered pose matrices.
   """
-
-
   poses_ = poses.copy()
   bottom = np.reshape([0, 0, 0, 1.], [1, 4])
   c2w = poses_avg(poses)

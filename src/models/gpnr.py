@@ -26,6 +26,9 @@ from gen_patch_neural_rendering.src.models import transformer
 from gen_patch_neural_rendering.src.utils import config_utils
 from gen_patch_neural_rendering.src.utils import lf_utils
 from gen_patch_neural_rendering.src.utils import model_utils
+#from gen_patch_neural_rendering.src.utils import pose_utils
+#from gen_patch_neural_rendering.src.utils import data_types
+#from gen_patch_neural_rendering.source import conf
 
 
 class GPNR(nn.Module):
@@ -89,8 +92,15 @@ class GPNR(nn.Module):
     )
     self.feature_activation = nn.elu
 
-    self.mean = einshape("x->111x", jnp.array([0.485, 0.456, 0.406]))
-    self.std = einshape("x->111x", jnp.array([0.229, 0.224, 0.225]))
+    #if args.dataset.eval_dataset == "xray":
+    #    self.mean = einshape("x->111x", jnp.array([0.085, 0.085, 0.085]))#0.085 mit skalierung (0-1)#0.155 ohne
+    #    self.std = einshape("x->111x", jnp.array([0.166, 0.166, 0.166]))#0.166 mit skalierung (0-1)#0.299 ohne
+    #else:
+    #    self.mean = einshape("x->111x", jnp.array([0.485, 0.456, 0.406]))
+    #    self.std = einshape("x->111x", jnp.array([0.229, 0.224, 0.225]))
+
+    self.mean = einshape("x->111x", jnp.array([0.085, 0.085, 0.085]))  # 0.085 mit skalierung (0-1)#0.155 ohne
+    self.std = einshape("x->111x", jnp.array([0.166, 0.166, 0.166]))  # 0.166 mit skalierung (0-1)#0.299 ohne
 
   def _get_query(self, rays):
     """Get the light field encoding for the target rays.
@@ -145,6 +155,9 @@ class GPNR(nn.Module):
     input_k = jnp.concatenate(
         [k_samples_enc, wcoords_enc, projected_rgb_and_feat], axis=-1)
 
+    #import pyvista
+    #pyvista.PolyData(wcoords.numpy()).plot()
+
     return k_samples, input_k, k_mask
 
   def _get_pixel_projection(self, projected_coordinates, ref_images):
@@ -159,7 +172,6 @@ class GPNR(nn.Module):
                                                         ref_images)
     projected_features = jnp.concatenate([projected_features, projected_rgb],
                                          axis=-1)
-
     return projected_features
 
   def _get_avg_features(self, input_q, input_k, randomized):
