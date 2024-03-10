@@ -110,7 +110,7 @@ def get_dataset_config():
   dataset_config.eval_llff_image_height = 756
   dataset_config.eval_llff_image_width = 1008
 
-  dataset_config.batch_size = 4096
+  dataset_config.batch_size = 1
   dataset_config.batching = "single_image"
   dataset_config.cam_transform = False
 
@@ -122,7 +122,7 @@ def get_dataset_config():
   # If True, generate rays through the center of each pixel.
   # Note: While this is the correct way to handle rays, it
   # is not the way rays are handled in the original NeRF paper.
-  dataset_config.use_pixel_centers = False #vorher False
+  dataset_config.use_pixel_centers = True #vorher False
   # to store height and width
 
   dataset_config.normalize = True
@@ -188,7 +188,7 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 127 #num of samples
+  model_config.num_projections = 60 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
@@ -234,7 +234,7 @@ def get_train_config():
   train_config.lr_init = 2.0e-3
   train_config.warmup_epochs = 1
   train_config.weight_decay = 0.
-  train_config.warmup_steps = 2500
+  train_config.warmup_steps = 25
   train_config.lr_final = 2.0e-5
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
@@ -244,12 +244,12 @@ def get_train_config():
   # The gradient clipping magnitude (disabled if == 0).
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
-  train_config.max_steps = 250000
-  train_config.num_epochs = 180
-  train_config.checkpoint_every_steps = 1000
+  train_config.max_steps = 3600
+  train_config.num_epochs = 18
+  train_config.checkpoint_every_steps = 250
   train_config.log_loss_every_steps = 500
   train_config.render_every_steps = 5000
-  train_config.gc_every_steps = 10000
+  train_config.gc_every_steps = 250
 
   return train_config
 
@@ -267,7 +267,7 @@ def get_eval_config():
   eval_config.save_output = True
   # the size of chunks for evaluation inferences,
   # set to the value that fits your GPU/TPU memory.
-  eval_config.chunk = 64#4096
+  eval_config.chunk = 512#4096
   eval_config.inference = False
 
   eval_config.mvsn_style = False
