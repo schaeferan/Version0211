@@ -188,14 +188,14 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 60 #num of samples
+  model_config.num_projections = 127 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
   model_config.return_attn = False
 
   model_config.init_final_precision = "DEFAULT"
-  model_config.normalize_ref_image = True
+  model_config.normalize_ref_image = False
 
   # Predict RGB from interpolated features.
   model_config.predict_feature_rgb = True

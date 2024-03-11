@@ -262,9 +262,9 @@ class FFEpipolar(BaseDataset):
 
       ## Grauwerte
       ## Skaliere alle Bilder im Bezug auf den globalen Mindest- und Maximalwert
-      #scaled_images = (images - min_value) / (max_value - min_value) * 255
+      scaled_images = (images - min_value) / (max_value - min_value) * 255
 
-      scaled_images = images / max_value
+      #scaled_images = images / max_value
 
       # test = images[0]
       #
