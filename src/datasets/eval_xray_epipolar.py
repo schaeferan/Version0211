@@ -36,7 +36,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     xml_file_path = args.dataset.XML_dir
 
     projection_matrices = parse_projection_matrices(xml_file_path)
-    projection_matrices = projection_matrices[:args.dataset.eval_length]
+    #projection_matrices = projection_matrices[:args.dataset.eval_length]
+    projection_matrices = projection_matrices[89:109]
     #self.projection_matrices = np.array(projection_matrices)
 
     XML_dict = analyze_xml_file(xml_file_path)

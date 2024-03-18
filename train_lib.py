@@ -356,6 +356,16 @@ def train_and_evaluate(config, workdir):
 
 ######################################################################################################################
 
+  train_loss_list = []
+  train_psnr_list = []
+  weight_l2_list = []
+  learining_rate_list = []
+
+  total_loss_list = []
+  train_loss_std_list = []
+  train_loss_c_list = []
+  train_psnr_c_list = []
+
   "#Schritt 10: Erstellen von Metrik-Schreibern für das Logging."
   # Prepare Metric Writers
   writer = metric_writers.create_default_writer(
@@ -383,7 +393,7 @@ def train_and_evaluate(config, workdir):
     ]
   train_metrics = None
 
-######################################################################################################################
+  ######################################################################################################################
 
   "#Schritt 12: Vorbereiten des Trainingsdatensatzes für die Geräte."
   print("Step 12")
@@ -446,12 +456,29 @@ def train_and_evaluate(config, workdir):
         #Die Methode write_scalars des writer-Objekts wird aufgerufen, um die berechneten Metriken zu speichern.
         #Die Metriken werden mit dem aktuellen Schritt verknüpft.
         writer.write_scalars(step, train_metrics.compute())
+
+        # Berechne die Metriken
+        log_dict = metric_update.compute()
+        # Wandele die Metriken in ein JSON-freundliches Format um
+        for k, v in log_dict.items():
+            log_dict[k] = v.item()
+
+        train_loss_list.append(log_dict["train_loss"])
+        train_psnr_list.append(log_dict["train_psnr"])
+        weight_l2_list.append(log_dict["weight_l2"])
+        learining_rate_list.append(log_dict["learining_rate"])
+        total_loss_list.append(log_dict["total_loss"])
+        train_loss_std_list.append(log_dict["train_loss_std"])
+        train_loss_c_list.append(log_dict["train_loss_c"])
+        train_psnr_c_list.append(log_dict["train_psnr_c"])
+
         #Das Objekt train_metrics wird auf None zurückgesetzt, um es auf die nächsten Metriken vorzubereiten.
         train_metrics = None
+
      ###################################################################################################################
       #print("Step 18")
       #Schritt 18: Ausführen einer Evaluation.
-      if step % config.train.render_every_steps == 0 or is_last_step:
+      if step % config.train.render_every_steps == 0: #or is_last_step:
         test_batch = next(eval_ds)
         #Das Bild (test_batch.target_view.rgb) wird in den Fließkommawertebereich umgewandelt, um für die Evaluation verwendet zu werden.
         test_pixels = model_utils.uint2float(
@@ -501,20 +528,52 @@ def train_and_evaluate(config, workdir):
       #Schritt 20: Speichern von Checkpoints.
       #Dieser Schritt wird nur vom Host mit Index 0 durchgeführt.
       if (jax.process_index()
-          == 0) and (step % config.train.checkpoint_every_steps == 0 or
-                     is_last_step):
-        # Write final metrics to file
-        #Dazu werden die berechneten Metriken aus dem metric_update-Objekt extrahiert und in ein JSON-Format umgewandelt.
-        #Die Metriken werden in einer Datei mit dem Namen "train_logs.json" im Arbeitsverzeichnis gespeichert.
-        with file_utils.open_file(
-            os.path.join(workdir, "train_logs.json"), "w") as f:
-          log_dict = metric_update.compute()
-          for k, v in log_dict.items():
-            log_dict[k] = v.item()
-          f.write(json.dumps(log_dict))
-        with report_progress.timed("checkpoint"):
-          state_to_save = jax.device_get(jax.tree_map(lambda x: x[0], state))
-          checkpoints.save_checkpoint(workdir, state_to_save, step, keep=100)#Es werden maximal 100 Checkpoints aufbewahrt, um den Speicherplatz zu begrenzen.
+         == 0) and (step % config.train.checkpoint_every_steps == 0 or
+                    is_last_step):
+       # Write final metrics to file
+       #Dazu werden die berechneten Metriken aus dem metric_update-Objekt extrahiert und in ein JSON-Format umgewandelt.
+       #Die Metriken werden in einer Datei mit dem Namen "train_logs.json" im Arbeitsverzeichnis gespeichert.
+
+       # Generiere einen eindeutigen Dateinamen für jede Iteration
+       filename = f"train_logs_{step}.json"  # Annahme: 'step' ist definiert
+       train_loss_file = f"train_loss.json"
+       train_psnr_file = f"train_psnr.json"
+       weight_l2_file = f"weights_l2.json"
+       learning_rate_file = f"lr.json"
+       total_loss_file = f"total_loss.json"
+       train_loss_std_file = f"train_loss_std.json"
+       train_loss_c_file = "train_loss_c.json"
+       train_psnr_c_file = "train_psnr_c.json"
+
+       with file_utils.open_file(os.path.join(workdir, train_loss_file), "w") as f:
+           f.write(json.dumps(train_loss_list))
+       with file_utils.open_file(os.path.join(workdir, train_psnr_file), "w") as f:
+           f.write(json.dumps(train_psnr_list))
+       with file_utils.open_file(os.path.join(workdir, weight_l2_file), "w") as f:
+           f.write(json.dumps(weight_l2_list))
+       with file_utils.open_file(os.path.join(workdir, learning_rate_file), "w") as f:
+           f.write(json.dumps(learining_rate_list))
+       with file_utils.open_file(os.path.join(workdir, total_loss_file), "w") as f:
+           f.write(json.dumps(total_loss_list))
+       with file_utils.open_file(os.path.join(workdir, train_loss_std_file), "w") as f:
+           f.write(json.dumps(train_loss_std_file))
+       with file_utils.open_file(os.path.join(workdir, train_loss_c_file), "w") as f:
+           f.write(json.dumps(train_loss_c_file))
+       with file_utils.open_file(os.path.join(workdir, train_psnr_c_file), "w") as f:
+           f.write(json.dumps(train_psnr_c_file))
+
+
+       #with file_utils.open_file(os.path.join(workdir, "train_logs.json"), "w") as f:
+       with file_utils.open_file(os.path.join(workdir, filename), "w") as f:
+        log_dict = metric_update.compute()
+        for k, v in log_dict.items():
+          log_dict[k] = v.item()
+        f.write(json.dumps(log_dict))
+
+
+       with report_progress.timed("checkpoint"):
+         state_to_save = jax.device_get(jax.tree_map(lambda x: x[0], state))
+         checkpoints.save_checkpoint(workdir, state_to_save, step, keep=50)#Es werden maximal 100 Checkpoints aufbewahrt, um den Speicherplatz zu begrenzen.
 
   #Schritt 21: Abschluss der Trainingsschleife.
   logging.info("Finishing training at step %d", num_train_steps)
