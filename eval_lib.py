@@ -201,15 +201,15 @@ def evaluate(config, workdir):
             psnr = model_utils.compute_psnr(
                 ((pred_color - test_pixels)**2).mean())
           #SSIM (Structural Similarity Index)
-          # ssim = skmetrics.structural_similarity(
-          #     pred_color.astype(np.float32),
-          #     test_pixels.astype(np.float32),
-          #     win_size=11,#11
-          #     data_range=255,#vorher nicht da
-          #     #multichannel=True,
-          #     channel_axis=-1,#vohrer multichannel
-          #     gaussian_weights= False) #True
-          ssim = 0
+            ssim = skmetrics.structural_similarity(
+               pred_color,#.astype(np.float32),
+               test_pixels,#.astype(np.float32),
+               win_size=11,#11
+               data_range=2,#vorher nicht da
+               #multichannel=True,
+               channel_axis=-1,#vohrer multichannel
+               gaussian_weights= True) #True
+
           logging.info(f"PSNR = {psnr:.4f}, SSIM = {ssim:.4f}")  # pylint: disable=logging-fstring-interpolation
           psnr_values.append(float(psnr))
           ssim_values.append(float(ssim))
