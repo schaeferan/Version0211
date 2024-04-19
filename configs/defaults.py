@@ -92,7 +92,7 @@ def get_dataset_config():
   # Eval XRAY. Setze das Verzeichnis für die Evaluierung des Datensatzes "xray".
   #--------------------------------------------------------
   dataset_config.eval_xray_dir = ""
-  dataset_config.eval_length = 8
+  dataset_config.eval_length = 20
   dataset_config.eval_xray_image_height = 976
   dataset_config.eval_xray_image_width = 976
 
@@ -229,7 +229,7 @@ def get_train_config():
   train_config = ml_collections.ConfigDict()
 
   train_config.pretrain_dir = ""
-  train_config.switch_scene_iter = 500
+  train_config.switch_scene_iter = 800
   train_config.scheduler = "linear"
   train_config.lr_init = 2.0e-3
   train_config.warmup_epochs = 1
@@ -247,7 +247,7 @@ def get_train_config():
   train_config.max_steps = 3600
   train_config.num_epochs = 18
   train_config.checkpoint_every_steps = 200
-  train_config.log_loss_every_steps = 100
+  train_config.log_loss_every_steps = 10
   train_config.render_every_steps = 1000
   train_config.gc_every_steps = 250
 

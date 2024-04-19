@@ -489,6 +489,10 @@ def train_and_evaluate(config, workdir):
           pred_color, pred_disp, pred_acc = eval_step(state, keys[0],
                                                       test_batch, render_pfn,
                                                       config)
+        #outdir = "workdir=/home/woody/iwi5/iwi5143h"
+        model_utils.save_img(pred_color,os.path.join(workdir, "{:03d}.png".format(step)))
+
+
  #################################################################################################################
         #------------------------------------------------------------------
         # Log metrics and images for host 0
@@ -529,9 +533,7 @@ def train_and_evaluate(config, workdir):
 
       #Schritt 20: Speichern von Checkpoints.
       #Dieser Schritt wird nur vom Host mit Index 0 durchgeführt.
-      if (jax.process_index()
-         == 0) and (step % config.train.checkpoint_every_steps == 0 or
-                    is_last_step):
+      if (jax.process_index() == 0) and (step % config.train.checkpoint_every_steps == 0 or  is_last_step):
        # Write final metrics to file
        #Dazu werden die berechneten Metriken aus dem metric_update-Objekt extrahiert und in ein JSON-Format umgewandelt.
        #Die Metriken werden in einer Datei mit dem Namen "train_logs.json" im Arbeitsverzeichnis gespeichert.
