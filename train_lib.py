@@ -480,7 +480,7 @@ def train_and_evaluate(config, workdir):
      ###################################################################################################################
       #print("Step 18")
       #Schritt 18: Ausführen einer Evaluation.
-      if step % config.train.render_every_steps == 0: #or is_last_step:
+      if step % config.train.render_every_steps == 0 or is_last_step:
         test_batch = next(eval_ds)
         #Das Bild (test_batch.target_view.rgb) wird in den Fließkommawertebereich umgewandelt, um für die Evaluation verwendet zu werden.
         test_pixels = model_utils.uint2float(
