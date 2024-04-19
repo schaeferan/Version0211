@@ -91,7 +91,6 @@ def train_step(
     Returns:
         The total loss and computed statistics.
     """
-
     variables = {"params": params}
 
     ret = model.apply(
@@ -146,6 +145,9 @@ def train_step(
 
     #The total_loss is the sum of the main loss, coarse loss, and the weight penalty
     total_loss = loss + loss_c + weight_penalty
+
+    #Insgesamt ist der JVP Tracer eine wichtige Komponente von Bibliotheken für automatische Differentiation wie JAX, die es ermöglichen,
+    #Gradienten effizient und genau zu berechnen, was für das Training von neuronalen Netzen und die Optimierung von Funktionen unerlässlich ist.
 
     #The function creates a Stats object using train_utils.Stats to store the loss and PSNR values for both the main prediction and the coarse prediction,
     #along with the weight L2 norm. Finally, the total_loss and stats are returned as a tuple.
@@ -570,7 +572,7 @@ def train_and_evaluate(config, workdir):
           log_dict[k] = v.item()
         f.write(json.dumps(log_dict))
 
-
+        #warnung
        with report_progress.timed("checkpoint"):
          state_to_save = jax.device_get(jax.tree_map(lambda x: x[0], state))
          checkpoints.save_checkpoint(workdir, state_to_save, step, keep=50)#Es werden maximal 100 Checkpoints aufbewahrt, um den Speicherplatz zu begrenzen.

@@ -105,6 +105,7 @@ class FFEpipolar(BaseDataset):
 
   def _next_train(self):
     """Sample batch for training."""
+
     if self.batching == "single_image":
       image_index = np.random.randint(0, self.n_examples, ())
       ray_indices = np.random.randint(0, self.rays.batch_shape[1],
@@ -339,8 +340,8 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
       #projection_matrices = projection_matrices[9:11]
-      #projection_matrices = projection_matrices[:89] + projection_matrices[109:]
-      projection_matrices = projection_matrices[89:109]
+      projection_matrices = projection_matrices[:89] + projection_matrices[109:]
+      #projection_matrices = projection_matrices[89:91]
       #projection_matrices = projection_matrices[:args.dataset.eval_length]
       # self.projection_matrices = np.array(projection_matrices)
 

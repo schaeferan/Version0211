@@ -96,8 +96,8 @@ class GPNR(nn.Module):
     #    self.mean = einshape("x->111x", jnp.array([0.085, 0.085, 0.085]))#0.085 mit skalierung (0-1)#0.155 ohne
     #    self.std = einshape("x->111x", jnp.array([0.166, 0.166, 0.166]))#0.166 mit skalierung (0-1)#0.299 ohne
     #else:
-    #    self.mean = einshape("x->111x", jnp.array([0.485, 0.456, 0.406]))
-    #    self.std = einshape("x->111x", jnp.array([0.229, 0.224, 0.225]))
+        #self.mean = einshape("x->111x", jnp.array([0.485, 0.456, 0.406]))
+        #self.std = einshape("x->111x", jnp.array([0.229, 0.224, 0.225]))
 
     self.mean = einshape("x->111x", jnp.array([0.085, 0.085, 0.085]))  # 0.085 mit skalierung (0-1)#0.155 ohne
     self.std = einshape("x->111x", jnp.array([0.166, 0.166, 0.166]))  # 0.166 mit skalierung (0-1)#0.299 ohne

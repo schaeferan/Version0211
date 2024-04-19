@@ -41,6 +41,7 @@ def create_model(config, rng, example_batch):
   Returns:
     The model and intial parameters
   """
+  #example_batch = ref_views + target_views
   example_batch = prepare_example_batch(example_batch)
 
   key0, rng = jax.random.split(rng, 2)

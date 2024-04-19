@@ -106,6 +106,7 @@ class BaseDataset(threading.Thread):
     while True:
       self.queue.put(next_func())
 
+
   @property
   def size(self):
     """
@@ -178,12 +179,7 @@ class BaseDataset(threading.Thread):
     self.it = 0
 
   def _next_train(self):
-    """
-    Sample next test example.
-
-    Returns:
-        data_types.Batch: A batch of test data.
-    """
+    """Sample next training batch."""
 
 
     if self.batching == "single_image":
