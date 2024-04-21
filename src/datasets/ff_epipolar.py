@@ -339,8 +339,20 @@ class FFEpipolar(BaseDataset):
       xml_file_path = args.dataset.XML_dir
 
       projection_matrices = parse_projection_matrices(xml_file_path)
+      #projection_matrices_array = np.array(projection_matrices)
+
+
+      # Liste 1 mit den spezifizierten Indexpositionen
+      liste_1_indices = set(range(0, 200, 10))
+      liste_1 = [projection_matrices[i] for i in liste_1_indices]
+
+      # Liste 2 mit den restlichen Indexpositionen
+      liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
+
+      projection_matrices = liste_2
+
       #projection_matrices = projection_matrices[9:11]
-      projection_matrices = projection_matrices[:89] + projection_matrices[109:]
+      #projection_matrices = projection_matrices[:89] + projection_matrices[109:]
       #projection_matrices = projection_matrices[89:91]
       #projection_matrices = projection_matrices[:args.dataset.eval_length]
       # self.projection_matrices = np.array(projection_matrices)

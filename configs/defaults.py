@@ -188,7 +188,7 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 126 #num of samples
+  model_config.num_projections = 10 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
@@ -246,7 +246,7 @@ def get_train_config():
   train_config.grad_max_val = 0
   train_config.max_steps = 3600
   train_config.num_epochs = 18
-  train_config.checkpoint_every_steps = 200
+  train_config.checkpoint_every_steps = 600
   train_config.log_loss_every_steps = 10
   train_config.render_every_steps = 1000
   train_config.gc_every_steps = 250
