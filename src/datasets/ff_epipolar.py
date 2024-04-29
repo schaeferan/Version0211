@@ -189,7 +189,7 @@ class FFEpipolar(BaseDataset):
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
-    #    imwrite(filename, rgb_images)
+        imwrite(filename, rgb_images)
 
 
 
@@ -260,7 +260,7 @@ class FFEpipolar(BaseDataset):
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
-    #    imwrite(filename, rgb_images)
+        imwrite(filename, rgb_images)
 
     return return_batch
 
