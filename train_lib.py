@@ -469,7 +469,7 @@ def train_and_evaluate(config, workdir):
         for k, v in log_dict.items():
             log_dict[k] = v.item()
 
-        train_loss_list.append(log_dict["weight_penalty"])
+        weight_penalty_list.append(log_dict["weight_penalty"])
         train_loss_list.append(log_dict["train_loss"])
         train_psnr_list.append(log_dict["train_psnr"])
         weight_l2_list.append(log_dict["weight_l2"])
