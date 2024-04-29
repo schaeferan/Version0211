@@ -252,7 +252,6 @@ class FFEpipolar(BaseDataset):
     #filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
-
     if current_step % 5000 == 0:
         print("test_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
