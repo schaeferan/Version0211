@@ -110,7 +110,7 @@ def get_dataset_config():
   dataset_config.eval_llff_image_height = 756
   dataset_config.eval_llff_image_width = 1008
 
-  dataset_config.batch_size = 1
+  dataset_config.batch_size = 2
   dataset_config.batching = "single_image"
   dataset_config.cam_transform = False
 
@@ -188,7 +188,7 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 10 #num of samples
+  model_config.num_projections = 5 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
@@ -229,12 +229,12 @@ def get_train_config():
   train_config = ml_collections.ConfigDict()
 
   train_config.pretrain_dir = ""
-  train_config.switch_scene_iter = 800
+  train_config.switch_scene_iter = 240000
   train_config.scheduler = "linear"
   train_config.lr_init = 2.0e-3
   train_config.warmup_epochs = 1
   train_config.weight_decay = 0.
-  train_config.warmup_steps = 25
+  train_config.warmup_steps = 5
   train_config.lr_final = 2.0e-5
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
@@ -242,14 +242,15 @@ def get_train_config():
   train_config.lr_delay_mult = 0.1
 
   # The gradient clipping magnitude (disabled if == 0).
+  train_config.step_factor = 1
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
-  train_config.max_steps = 3600
-  train_config.num_epochs = 18
-  train_config.checkpoint_every_steps = 600
-  train_config.log_loss_every_steps = 10
-  train_config.render_every_steps = 1000
-  train_config.gc_every_steps = 250
+  train_config.max_steps = 60000 * train_config.step_factor
+  train_config.num_epochs = train_config.step_factor
+  train_config.checkpoint_every_steps = 6000
+  train_config.log_loss_every_steps = 100
+  train_config.render_every_steps = 6000
+  train_config.gc_every_steps = 1000
 
   return train_config
 

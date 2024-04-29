@@ -44,7 +44,7 @@ class BaseDataset(threading.Thread):
     self.queue = queue.Queue(6)  # Set prefetch buffer to 6 batches.
     self.daemon = True
     self.split = split
-
+    self.mystep = 0
     self.use_pixel_centers = args.dataset.use_pixel_centers
     if split == "train":
       print("split == train")

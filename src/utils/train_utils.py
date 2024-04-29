@@ -32,6 +32,7 @@ class Stats:
   loss_c: float
   psnr_c: float
   weight_l2: float
+  weight_penalty: float
 
 
 @flax.struct.dataclass
@@ -45,6 +46,7 @@ class TrainMetrics(metrics.Collection):
   train_psnr: metrics.Average.from_output("psnr")
   train_psnr_c: metrics.Average.from_output("psnr_c")
   weight_l2: metrics.Average.from_output("weight_l2")
+  weight_penalty: metrics.Average.from_output("weight_penalty")
 
 
 def create_learning_rate_fn(config,):

@@ -30,7 +30,8 @@ import numpy as np
 from skimage import io
 from skimage.color import rgb2gray
 import tifffile as tiff
-
+from tifffile import imwrite
+import matplotlib.pyplot as plt
 from gen_patch_neural_rendering.src.datasets.base import BaseDataset
 from gen_patch_neural_rendering.src.utils import data_types
 from gen_patch_neural_rendering.src.utils import file_utils
@@ -103,6 +104,7 @@ class FFEpipolar(BaseDataset):
     self.sorted_near_cam = np.argsort(
         test2traincam, axis=-1)[Ellipsis, :self.num_ref_views]
 
+
   def _next_train(self):
     """Sample batch for training."""
 
@@ -166,6 +168,23 @@ class FFEpipolar(BaseDataset):
     else:
       raise ValueError("Batching {} not implemented".format(self.batching))
 
+    self.mystep = self.mystep + 1
+    #print("train_batch_nr: ", self.mystep)
+
+    current_step = self.mystep - 12
+
+    if current_step % 6000 == 0:
+        print("train_batch_nr: ", self.mystep)
+        rgb_images = return_batch.reference_views.rgb
+        #output_folder = "/home/andre/Bilder/ref_views/train"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
+        # Dateipfad für das gesamte Array von Bildern
+        filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
+        # Speichern des gesamten Arrays von Bildern als TIFF
+        imwrite(filename, rgb_images)
+
+
+
     return return_batch
 
   def _next_test(self):
@@ -212,6 +231,19 @@ class FFEpipolar(BaseDataset):
 
     return_batch = data_types.Batch(
         target_view=target_view, reference_views=reference_views)
+
+    #self.mystep = self.mystep + 1
+    #print("test_batch_nr: ", self.mystep)
+
+    #current_step = self.mystep #- 12
+
+    #rgb_images = return_batch.reference_views.rgb
+    #output_folder = "/home/andre/Bilder/ref_views/test"
+    #output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
+    ## Dateipfad für das gesamte Array von Bildern
+    #filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
+    ## Speichern des gesamten Arrays von Bildern als TIFF
+    #imwrite(filename, rgb_images)
 
     return return_batch
 

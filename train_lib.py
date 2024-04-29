@@ -136,8 +136,10 @@ def train_step(
     #------------------------------------------------------------------------
     # Weight Regularization
     weight_penalty_params = jax.tree_leaves(variables["params"])
+    #die Summe der Quadrate aller Gewichtsmatrizen im Modell, wobei nur Gewichtsmatrizen mit mehr als einer Dimension berücksichtigt werden.
     weight_l2 = sum(
         [jnp.sum(x**2) for x in weight_penalty_params if x.ndim > 1])
+    #weight_decay = 0??
     weight_penalty = weight_decay * 0.5 * weight_l2
 
     #------------------------------------------------------------------------
@@ -152,7 +154,7 @@ def train_step(
     #The function creates a Stats object using train_utils.Stats to store the loss and PSNR values for both the main prediction and the coarse prediction,
     #along with the weight L2 norm. Finally, the total_loss and stats are returned as a tuple.
     stats = train_utils.Stats(
-        loss=loss, psnr=psnr, loss_c=loss_c, psnr_c=psnr_c, weight_l2=weight_l2)
+        loss=loss, psnr=psnr, loss_c=loss_c, psnr_c=psnr_c, weight_l2=weight_l2, weight_penalty=weight_penalty)
     return total_loss, stats
 
 #######################################################################################################################
@@ -177,7 +179,8 @@ def train_step(
       loss_c=stats.loss_c, #coarse loss/ grober Verlust
       psnr_c=stats.psnr_c, #coarse psnr/ grober psnr
       weight_l2=stats.weight_l2,
-      learning_rate=lr)
+      learning_rate=lr,
+      weight_penalty=stats.weight_penalty)
   return new_state, metrics_update, rng
 
 #######################################################################################################################
@@ -362,7 +365,7 @@ def train_and_evaluate(config, workdir):
   train_psnr_list = []
   weight_l2_list = []
   learining_rate_list = []
-
+  weight_penalty_list = []
   total_loss_list = []
   train_loss_std_list = []
   train_loss_c_list = []
@@ -409,6 +412,7 @@ def train_and_evaluate(config, workdir):
 
   "#Schritt 13: Schleife über die Trainings-Steps."
   print("Step13")
+
 
   #with statement to ensure that the metric writer's buffers are flushed at the end of each iteration.
   with metric_writers.ensure_flushes(writer):
@@ -465,6 +469,7 @@ def train_and_evaluate(config, workdir):
         for k, v in log_dict.items():
             log_dict[k] = v.item()
 
+        train_loss_list.append(log_dict["weight_penalty"])
         train_loss_list.append(log_dict["train_loss"])
         train_psnr_list.append(log_dict["train_psnr"])
         weight_l2_list.append(log_dict["weight_l2"])
@@ -548,7 +553,10 @@ def train_and_evaluate(config, workdir):
        train_loss_std_file = f"train_loss_std.json"
        train_loss_c_file = "train_loss_c.json"
        train_psnr_c_file = "train_psnr_c.json"
+       weight_penalty_file = "weight_penalty.json"
 
+       with file_utils.open_file(os.path.join(workdir, weight_penalty_file), "w") as f:
+           f.write(json.dumps(weight_penalty_list))
        with file_utils.open_file(os.path.join(workdir, train_loss_file), "w") as f:
            f.write(json.dumps(train_loss_list))
        with file_utils.open_file(os.path.join(workdir, train_psnr_file), "w") as f:
