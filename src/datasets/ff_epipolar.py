@@ -171,17 +171,25 @@ class FFEpipolar(BaseDataset):
     self.mystep = self.mystep + 1
     #print("train_batch_nr: ", self.mystep)
 
-    current_step = self.mystep - 12
+    current_step = self.mystep #- 12
 
-    if current_step % 6000 == 0:
+    #rgb_images = return_batch.reference_views.rgb
+    #output_folder = "/home/andre/Bilder/ref_views/train"
+    ## output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
+    ## Dateipfad für das gesamte Array von Bildern
+    #filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
+    ## Speichern des gesamten Arrays von Bildern als TIFF
+    #imwrite(filename, rgb_images)
+
+    if current_step % 5000 == 0:
         print("train_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
         #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex1_1lr"
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
-        imwrite(filename, rgb_images)
+    #    imwrite(filename, rgb_images)
 
 
 
@@ -232,18 +240,28 @@ class FFEpipolar(BaseDataset):
     return_batch = data_types.Batch(
         target_view=target_view, reference_views=reference_views)
 
-    #self.mystep = self.mystep + 1
+    self.mystep = self.mystep + 1
     #print("test_batch_nr: ", self.mystep)
 
-    #current_step = self.mystep #- 12
+    current_step = self.mystep #- 12
 
     #rgb_images = return_batch.reference_views.rgb
     #output_folder = "/home/andre/Bilder/ref_views/test"
-    #output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
+    ##output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
     ## Dateipfad für das gesamte Array von Bildern
     #filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
+
+    if current_step % 5000 == 0:
+        print("test_batch_nr: ", self.mystep)
+        rgb_images = return_batch.reference_views.rgb
+        #output_folder = "/home/andre/Bilder/ref_views/train"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex1_1lr"
+        # Dateipfad für das gesamte Array von Bildern
+        filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
+        # Speichern des gesamten Arrays von Bildern als TIFF
+    #    imwrite(filename, rgb_images)
 
     return return_batch
 
