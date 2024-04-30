@@ -185,7 +185,7 @@ class FFEpipolar(BaseDataset):
         print("train_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
         #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/Ex1_1_k200"
+        output_folder = "/home/woody/iwi5/iwi5143h/Ex1_1_k200_2"
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
@@ -256,7 +256,7 @@ class FFEpipolar(BaseDataset):
         print("test_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
         #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/Ex1_1_k200"
+        output_folder = "/home/woody/iwi5/iwi5143h/Ex1_1_k200_2"
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
