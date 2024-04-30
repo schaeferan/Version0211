@@ -181,7 +181,7 @@ class FFEpipolar(BaseDataset):
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
 
-    if current_step % 5000 == 0:
+    if current_step % 15000 == 0:
         print("train_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
         #output_folder = "/home/andre/Bilder/ref_views/train"
