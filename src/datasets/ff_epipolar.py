@@ -548,11 +548,17 @@ class FFEpipolar(BaseDataset):
       projection_matrices = np.array(projection_matrices)
       projection_matrices = projection_matrices[indices]
 
+      first5  = images[:5, :, :, :]
+      output_folder = "/home/woody/iwi5/iwi5143h"
+      filename = os.path.join(output_folder, "first5.tiff")
+      imwrite(filename, first5)
+
       self.images = images
       self.camtoworlds = camtoworlds
       self.projection_matrices = projection_matrices
 
       self.n_examples = images.shape[0]
+    
   def _load_renderings(self, args):
     """Load images and camera information."""
     print("load renderings von FFEpi für Big train (normale version)")
