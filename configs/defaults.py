@@ -110,7 +110,7 @@ def get_dataset_config():
   dataset_config.eval_llff_image_height = 756
   dataset_config.eval_llff_image_width = 1008
 
-  dataset_config.batch_size = 2
+  dataset_config.batch_size = 16
   dataset_config.batching = "single_image"
   dataset_config.cam_transform = False
 
