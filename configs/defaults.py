@@ -229,9 +229,9 @@ def get_train_config():
   train_config = ml_collections.ConfigDict()
 
   train_config.pretrain_dir = ""
-  train_config.switch_scene_iter = 24000000
+  train_config.switch_scene_iter = 2400000000
   train_config.scheduler = "linear"
-  train_config.lr_init = 2.0e-3
+  train_config.lr_init = 10.0e-5
   train_config.warmup_epochs = 1
   train_config.weight_decay = 0.
   train_config.warmup_steps = 5
@@ -242,14 +242,14 @@ def get_train_config():
   train_config.lr_delay_mult = 0.1
 
   # The gradient clipping magnitude (disabled if == 0).
-  train_config.step_factor = 5
+  train_config.step_factor = 25
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
-  train_config.max_steps = 60000 * train_config.step_factor
+  train_config.max_steps = 10000 * train_config.step_factor
   train_config.num_epochs = train_config.step_factor
-  train_config.checkpoint_every_steps = 30000
+  train_config.checkpoint_every_steps = 50000
   train_config.log_loss_every_steps = 100
-  train_config.render_every_steps = 60000
+  train_config.render_every_steps = 50000
   train_config.gc_every_steps = 1000
 
   return train_config
@@ -268,7 +268,7 @@ def get_eval_config():
   eval_config.save_output = True
   # the size of chunks for evaluation inferences,
   # set to the value that fits your GPU/TPU memory.
-  eval_config.chunk = 512#4096
+  eval_config.chunk = 1024#4096
   eval_config.inference = False
 
   eval_config.mvsn_style = False
