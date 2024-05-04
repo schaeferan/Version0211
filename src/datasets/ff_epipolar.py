@@ -548,10 +548,10 @@ class FFEpipolar(BaseDataset):
       projection_matrices = np.array(projection_matrices)
       projection_matrices = projection_matrices[indices]
 
-      first5  = images[:5, :, :, :]
-      output_folder = "/home/woody/iwi5/iwi5143h"
-      filename = os.path.join(output_folder, "first5.tiff")
-      imwrite(filename, first5)
+      #first5  = images[:5, :, :, :]
+      #output_folder = "/home/woody/iwi5/iwi5143h"
+      #filename = os.path.join(output_folder, "first5.tiff")
+      #imwrite(filename, first5)
 
       self.images = images
       self.camtoworlds = camtoworlds
