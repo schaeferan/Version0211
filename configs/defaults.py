@@ -231,10 +231,10 @@ def get_train_config():
   train_config.pretrain_dir = ""
   train_config.switch_scene_iter = 2400000000
   train_config.scheduler = "linear"
-  train_config.lr_init = 10.0e-5
-  train_config.warmup_epochs = 1
+  train_config.lr_init = 3.0e-4
+  train_config.warmup_epochs = 2
   train_config.weight_decay = 0.
-  train_config.warmup_steps = 5
+  train_config.warmup_steps = 2500
   train_config.lr_final = 2.0e-5
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
