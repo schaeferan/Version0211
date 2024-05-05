@@ -496,6 +496,15 @@ def train_and_evaluate(config, workdir):
                                                       config)
         #outdir = "workdir=/home/woody/iwi5/iwi5143h"
         model_utils.save_img(pred_color,os.path.join(workdir, "{:03d}.png".format(step)))
+        model_utils.save_img(test_batch.target_view.rgb,os.path.join(workdir, "test_rgb_{:03d}.png".format(step)))
+
+        #rgb_image = test_batch.target_view.rgb
+        #output_folder = "/home/woody/iwi5/iwi5143h/"
+        ## output_folder = "/home/woody/iwi5/iwi5143h/run_29_04_Ex2_1NoReg_full"
+        ## Dateipfad für das gesamte Array von Bildern
+        #filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
+        ## Speichern des gesamten Arrays von Bildern als TIFF
+        #imwrite(filename, rgb_image)
 
 
  #################################################################################################################
