@@ -239,7 +239,7 @@ def get_train_config():
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
   # is < lr_delay_steps
-  train_config.lr_delay_mult = 0.1
+  train_config.lr_delay_mult = 0.05
 
   # The gradient clipping magnitude (disabled if == 0).
   train_config.step_factor = 3
