@@ -194,7 +194,7 @@ def get_model_config():
 
   model_config.return_attn = False
 
-  model_config.init_final_precision = "DEFAULT"
+  model_config.init_final_precision = "HIGH"
   model_config.normalize_ref_image = False
 
   # Predict RGB from interpolated features.
@@ -234,7 +234,7 @@ def get_train_config():
   train_config.lr_init = 3.0e-4
   train_config.warmup_epochs = 2
   train_config.weight_decay = 0.
-  train_config.warmup_steps = 2500
+  train_config.warmup_steps = 1000
   train_config.lr_final = 2.0e-5
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
