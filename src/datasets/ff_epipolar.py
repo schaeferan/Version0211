@@ -127,7 +127,7 @@ class FFEpipolar(BaseDataset):
       # During training for additional regularization we chose a random number
       # of reference view for interpolation
       # Top k number of views to consider when randomly sampling
-      total_views = 200
+      total_views = 20
       # Number of reference views to select
       # num_select = self.num_ref_views + np.random.randint(low=-2, high=3)
       num_select = self.num_ref_views
@@ -391,9 +391,10 @@ class FFEpipolar(BaseDataset):
       #projection_matrices_array = np.array(projection_matrices)
 
 
-      ## Liste 1 mit den spezifizierten Indexpositionen
-      #liste_1_indices = set(range(0, 200, 10))
-      #liste_1 = [projection_matrices[i] for i in liste_1_indices]
+      # Liste 1 mit den spezifizierten Indexpositionen
+      liste_1_indices = set(range(0, 200, 10))
+      liste_1 = [projection_matrices[i] for i in liste_1_indices]
+      projection_matrices = liste_1
       ## Liste 2 mit den restlichen Indexpositionen
       #liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
       #projection_matrices = liste_2

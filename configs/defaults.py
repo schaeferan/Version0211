@@ -126,7 +126,7 @@ def get_dataset_config():
   # to store height and width
 
   dataset_config.normalize = True
-  dataset_config.num_interpolation_views = 20#self.num_ref_views
+  dataset_config.num_interpolation_views = 10#self.num_ref_views
 
   # For generalization evaluation
   dataset_config.eval_dataset = "llff"
