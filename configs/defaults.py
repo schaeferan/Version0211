@@ -268,7 +268,7 @@ def get_eval_config():
   eval_config.save_output = True
   # the size of chunks for evaluation inferences,
   # set to the value that fits your GPU/TPU memory.
-  eval_config.chunk = 1024#4096
+  eval_config.chunk = 512#4096
   eval_config.inference = False
 
   eval_config.mvsn_style = False
