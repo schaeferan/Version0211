@@ -185,7 +185,7 @@ class FFEpipolar(BaseDataset):
         print("train_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
         #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_ex01"
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
@@ -256,7 +256,7 @@ class FFEpipolar(BaseDataset):
         print("test_batch_nr: ", self.mystep)
         rgb_images = return_batch.reference_views.rgb
         #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_ex01"
         # Dateipfad für das gesamte Array von Bildern
         filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
         # Speichern des gesamten Arrays von Bildern als TIFF
@@ -392,13 +392,15 @@ class FFEpipolar(BaseDataset):
 
 
       # Liste 1 mit den spezifizierten Indexpositionen
-      liste_1_indices = set(range(0, 200, 10))
-      liste_1 = [projection_matrices[i] for i in liste_1_indices]
-      projection_matrices = liste_1
+      #liste_1_indices = set(range(0, 200, 10))
+      #liste_1 = [projection_matrices[i] for i in liste_1_indices]
+      #projection_matrices = liste_1
+
       ## Liste 2 mit den restlichen Indexpositionen
       #liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
       #projection_matrices = liste_2
 
+      projection_matrices = projection_matrices[:20]
       #projection_matrices = projection_matrices[9:11]
       #projection_matrices = projection_matrices[:89] + projection_matrices[109:]
       #projection_matrices = projection_matrices[89:91]

@@ -37,12 +37,14 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     projection_matrices = parse_projection_matrices(xml_file_path)
 
-    # Liste 1 mit den spezifizierten Indexpositionen
-    liste_1_indices = set(range(0, 200, 10))
-    liste_1 = [projection_matrices[i] for i in liste_1_indices]
-    # Liste 2 mit den restlichen Indexpositionen
-    liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
-    projection_matrices = liste_1
+    projection_matrices = projection_matrices[:20]
+
+    ## Liste 1 mit den spezifizierten Indexpositionen
+    #liste_1_indices = set(range(0, 200, 10))
+    #liste_1 = [projection_matrices[i] for i in liste_1_indices]
+    ## Liste 2 mit den restlichen Indexpositionen
+    #liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
+    #projection_matrices = liste_1
 
     #projection_matrices = projection_matrices[::10]
     #projection_matrices = [element for element in projection_matrices if element not in removed_elements]
