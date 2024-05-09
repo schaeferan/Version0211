@@ -181,15 +181,15 @@ class FFEpipolar(BaseDataset):
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
 
-    #if current_step % 15000 == 0:
-    #    print("train_batch_nr: ", self.mystep)
-    #    rgb_images = return_batch.reference_views.rgb
-    #    #output_folder = "/home/andre/Bilder/ref_views/train"
-    #    output_folder = "/home/woody/iwi5/iwi5143h/Ex1_1_k200_2"
-    #    # Dateipfad für das gesamte Array von Bildern
-    #    filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
-    #    # Speichern des gesamten Arrays von Bildern als TIFF
-    #    imwrite(filename, rgb_images)
+    if current_step % 20000 == 0:
+        print("train_batch_nr: ", self.mystep)
+        rgb_images = return_batch.reference_views.rgb
+        #output_folder = "/home/andre/Bilder/ref_views/train"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
+        # Dateipfad für das gesamte Array von Bildern
+        filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
+        # Speichern des gesamten Arrays von Bildern als TIFF
+        imwrite(filename, rgb_images)
 
 
 
@@ -252,15 +252,15 @@ class FFEpipolar(BaseDataset):
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
 
-    #if current_step % 5 == 0:
-    #    print("test_batch_nr: ", self.mystep)
-    #    rgb_images = return_batch.reference_views.rgb
-    #    #output_folder = "/home/andre/Bilder/ref_views/train"
-    #    output_folder = "/home/woody/iwi5/iwi5143h/Ex1_1_k200_2"
-    #    # Dateipfad für das gesamte Array von Bildern
-    #    filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
-    #    # Speichern des gesamten Arrays von Bildern als TIFF
-    #    imwrite(filename, rgb_images)
+    if current_step % 5 == 0:
+        print("test_batch_nr: ", self.mystep)
+        rgb_images = return_batch.reference_views.rgb
+        #output_folder = "/home/andre/Bilder/ref_views/train"
+        output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
+        # Dateipfad für das gesamte Array von Bildern
+        filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
+        # Speichern des gesamten Arrays von Bildern als TIFF
+        imwrite(filename, rgb_images)
 
     return return_batch
 
