@@ -231,7 +231,7 @@ def get_train_config():
   train_config.pretrain_dir = ""
   train_config.switch_scene_iter = 2400000000
   train_config.scheduler = "linear"
-  train_config.lr_init = 3.0e-4
+  train_config.lr_init = 3.0e-5
   train_config.warmup_epochs = 2
   train_config.weight_decay = 0.
   train_config.warmup_steps = 1000
@@ -242,7 +242,7 @@ def get_train_config():
   train_config.lr_delay_mult = 0.1
 
   # The gradient clipping magnitude (disabled if == 0).
-  train_config.step_factor = 7
+  train_config.step_factor = 3
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
   train_config.max_steps = 60000 * train_config.step_factor
