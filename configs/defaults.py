@@ -242,7 +242,7 @@ def get_train_config():
   train_config.lr_delay_mult = 0.1
 
   # The gradient clipping magnitude (disabled if == 0).
-  train_config.step_factor = 3
+  train_config.step_factor = 7
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
   train_config.max_steps = 60000 * train_config.step_factor
