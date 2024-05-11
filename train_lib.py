@@ -526,7 +526,17 @@ def train_and_evaluate(config, workdir):
           #und den tatsächlichen Farbwerten (test_pixels) gemittelt und anschließend die PSNR berechnet.
           psnr = model_utils.compute_psnr(
               ((pred_color - test_pixels)**2).mean())
-          ssim = 0.#Hier könnte eine Berechnung der SSIM (Structural Similarity Index) erfolgen, sofern implementiert.
+          #ssim = 0.#Hier könnte eine Berechnung der SSIM (Structural Similarity Index) erfolgen, sofern implementiert.
+          ssim = skmetrics.structural_similarity(
+               pred_color,#.astype(np.float32),
+               test_pixels,#.astype(np.float32),
+               win_size=11,#11
+               data_range=2,#vorher nicht da
+               #multichannel=True,
+               channel_axis=-1,#vohrer multichannel
+               gaussian_weights= True) #True  
+
+        
 
           # die berechneten Metriken in das Metrik-Logging geschrieben.
           writer.write_scalars(step, {
