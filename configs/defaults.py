@@ -249,7 +249,7 @@ def get_train_config():
   train_config.num_epochs = train_config.step_factor
   train_config.checkpoint_every_steps = 20000
   train_config.log_loss_every_steps = 100
-  train_config.render_every_steps = 400
+  train_config.render_every_steps = 40000
   train_config.gc_every_steps = 1000
 
   return train_config
