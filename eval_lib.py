@@ -201,6 +201,7 @@ def evaluate(config, workdir):
             psnr = model_utils.compute_psnr(
                 ((pred_color - test_pixels)**2).mean())
           #SSIM (Structural Similarity Index)
+
             ssim = skmetrics.structural_similarity(
                pred_color,#.astype(np.float32),
                test_pixels,#.astype(np.float32),

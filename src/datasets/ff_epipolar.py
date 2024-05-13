@@ -181,15 +181,15 @@ class FFEpipolar(BaseDataset):
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
 
-    if current_step % 20000 == 0:
-        print("train_batch_nr: ", self.mystep)
-        rgb_images = return_batch.reference_views.rgb
-        #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
-        # Dateipfad für das gesamte Array von Bildern
-        filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
-        # Speichern des gesamten Arrays von Bildern als TIFF
-        imwrite(filename, rgb_images)
+    #if current_step % 20000 == 0:
+    #    print("train_batch_nr: ", self.mystep)
+    #    rgb_images = return_batch.reference_views.rgb
+    #    #output_folder = "/home/andre/Bilder/ref_views/train"
+    #    output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
+    #    # Dateipfad für das gesamte Array von Bildern
+    #    filename = os.path.join(output_folder, f"train_batch_{current_step}.tiff")
+    #    # Speichern des gesamten Arrays von Bildern als TIFF
+    #    imwrite(filename, rgb_images)
 
 
 
@@ -252,15 +252,15 @@ class FFEpipolar(BaseDataset):
     ## Speichern des gesamten Arrays von Bildern als TIFF
     #imwrite(filename, rgb_images)
 
-    if current_step % 5 == 0:
-        print("test_batch_nr: ", self.mystep)
-        rgb_images = return_batch.reference_views.rgb
-        #output_folder = "/home/andre/Bilder/ref_views/train"
-        output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
-        # Dateipfad für das gesamte Array von Bildern
-        filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
-        # Speichern des gesamten Arrays von Bildern als TIFF
-        imwrite(filename, rgb_images)
+    #if current_step % 5 == 0:
+    #    print("test_batch_nr: ", self.mystep)
+    #    rgb_images = return_batch.reference_views.rgb
+    #    #output_folder = "/home/andre/Bilder/ref_views/train"
+    #    output_folder = "/home/woody/iwi5/iwi5143h/run_ex02"
+    #    # Dateipfad für das gesamte Array von Bildern
+    #    filename = os.path.join(output_folder, f"test_batch_{current_step}.tiff")
+    #    # Speichern des gesamten Arrays von Bildern als TIFF
+    #    imwrite(filename, rgb_images)
 
     return return_batch
 
@@ -388,13 +388,18 @@ class FFEpipolar(BaseDataset):
       xml_file_path = args.dataset.XML_dir
 
       projection_matrices = parse_projection_matrices(xml_file_path)
+
+      projection_matrices = projection_matrices[::10]
+
       #projection_matrices_array = np.array(projection_matrices)
 
+      #array_of_arrays = np.array(list_of_arrays)
 
-      # Liste 1 mit den spezifizierten Indexpositionen
-      liste_1_indices = set(range(0, 200, 10))
-      liste_1 = [projection_matrices[i] for i in liste_1_indices]
-      projection_matrices = liste_1
+
+      ## Liste 1 mit den spezifizierten Indexpositionen
+      #liste_1_indices = set(range(0, 200, 10))
+      #liste_1 = [projection_matrices[i] for i in liste_1_indices]
+      #projection_matrices = liste_1
       ## Liste 2 mit den restlichen Indexpositionen
       #liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
       #projection_matrices = liste_2
