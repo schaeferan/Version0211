@@ -24,6 +24,7 @@ from absl import logging
 
 from clu import metric_writers
 from clu import metrics
+from skimage import metrics as skmetrics
 from clu import periodic_actions
 import flax
 import flax.jax_utils as flax_utils
@@ -527,12 +528,22 @@ def train_and_evaluate(config, workdir):
           psnr = model_utils.compute_psnr(
               ((pred_color - test_pixels)**2).mean())
           #ssim = 0.#Hier könnte eine Berechnung der SSIM (Structural Similarity Index) erfolgen, sofern implementiert.
+
           ssim = skmetrics.structural_similarity(
-              pred_color.astype(np.float32),
-              test_pixels.astype(np.float32),
-              win_size=11,
-              multichannel=True,
-              gaussian_weights=True)
+              pred_color,  # .astype(np.float32),
+              test_pixels,  # .astype(np.float32),
+              win_size=11,  # 11
+              data_range=2,  # vorher nicht da
+              # multichannel=True,
+              channel_axis=-1,  # vohrer multichannel
+              gaussian_weights=True)  # True
+
+          #ssim = skmetrics.structural_similarity(
+          #    pred_color.astype(np.float32),
+          #    test_pixels.astype(np.float32),
+          #    win_size=11,
+          #    multichannel=True,
+          #    gaussian_weights=True)
 
           # die berechneten Metriken in das Metrik-Logging geschrieben.
           writer.write_scalars(step, {

@@ -467,21 +467,41 @@ class FFEpipolar(BaseDataset):
       self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
                                         [0, 3934.43, 488, 0],
                                         [0, 0, 1, 0]]).astype(np.float32)
-      extrinsic_matrices = []
-      for P in projection_matrices:
-          K = self.intrinsic_matrix[:, :3]
-          # Zerlege die Projektionsmatrix P in [R | t]
-          K_inverse = np.linalg.inv(K)
-          [R, t] = np.dot(K_inverse, P)[:3, :].copy(), np.dot(K_inverse, P)[:3, 3].copy()
+      # extrinsic_matrices = []
+      # for P in projection_matrices:
+      #    K = self.intrinsic_matrix[:, :3]
+      #    # Zerlege die Projektionsmatrix P in [R | t]
+      #    K_inverse = np.linalg.inv(K)
+      #    [R, t] = np.dot(K_inverse, P)[:3, :].copy(), np.dot(K_inverse, P)[:3, 3].copy()
+      #
+      #    extrinsic_matrices.append(R)
+      #
+      # extrinsics_array = np.array(extrinsic_matrices)
+      # camtoworlds = extrinsics_array
 
-          extrinsic_matrices.append(R)
+      ########################################################
+      # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+      # # Extrahiere die intrinsische Matrix
+      K = self.intrinsic_matrix[:, :3]
+      # # Berechne die inverse intrinsische Matrix einmalig
+      K_inverse = np.linalg.inv(K)
+      RT = np.matmul(K_inverse, projection_matrices)
+      # Extrahiere die Rotationsmatrix R
+      R2 = RT[:, :, :3]
+      # Extrahiere die Translationsmatrix t
+      t2 = RT[:, :, 3]
+      # Erstelle die extrinsischen Matrizen als 3D-Matrix
+      extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
+      #################################################################
 
-      extrinsics_array = np.array(extrinsic_matrices)
-      camtoworlds = extrinsics_array
+      camtoworlds = extrinsic_matrices
 
-      # Convert R matrix from the form [up forward left] to [right up back]
-      camtoworlds = np.concatenate(
-          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      ##WARUM??
+      ## Convert R matrix from the form [up forward left] to [right up back]
+      #camtoworlds = np.concatenate(
+      #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+
+
 
       # Get the min and max depth of the scene
       self.min_depth = 420
