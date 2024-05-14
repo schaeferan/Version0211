@@ -516,10 +516,10 @@ class FFEpipolar(BaseDataset):
                                      [0, 0, 0, 1]])
       self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-      # bds *= scale
-      camtoworlds_copy = camtoworlds.copy()
-      camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-      camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+      ## bds *= scale
+      #camtoworlds_copy = camtoworlds.copy()
+      #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+      #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
       self.min_depth = scale * self.min_depth
       self.max_depth = scale * self.max_depth
