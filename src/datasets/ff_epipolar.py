@@ -498,8 +498,8 @@ class FFEpipolar(BaseDataset):
 
       ##WARUM??
       ## Convert R matrix from the form [up forward left] to [right up back]
-      camtoworlds = np.concatenate(
-          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      #camtoworlds = np.concatenate(
+      #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
 
