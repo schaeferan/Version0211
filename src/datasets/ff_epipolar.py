@@ -507,22 +507,22 @@ class FFEpipolar(BaseDataset):
       self.min_depth = 420
       self.max_depth = 820
 
-      scale = 1 / self.max_depth
+      #scale = 1 / self.max_depth
 
-      camtoworlds[:, :3, 3] *= scale
+      #camtoworlds[:, :3, 3] *= scale
 
       # Transformation der Kamerakoordinaten definieren
-      self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
-                                     [0, 0, 0, 1]])
-      self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+      #self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
+      #                               [0, 0, 0, 1]])
+      #self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
       ## bds *= scale
       #camtoworlds_copy = camtoworlds.copy()
       #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
       #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
-      self.min_depth = scale * self.min_depth
-      self.max_depth = scale * self.max_depth
+      #self.min_depth = scale * self.min_depth
+      #self.max_depth = scale * self.max_depth
 
       # self.min_depth = (self.min_depth,)
       # self.max_depth = (self.max_depth,)
@@ -571,7 +571,7 @@ class FFEpipolar(BaseDataset):
       camtoworlds = camtoworlds[indices]
       print("poses shape[0]: ", camtoworlds.shape[0])
 
-      projection_matrices = np.array(projection_matrices)
+      #projection_matrices = np.array(projection_matrices)
       projection_matrices = projection_matrices[indices]
 
       #first5  = images[:5, :, :, :]
@@ -685,6 +685,8 @@ class FFEpipolar(BaseDataset):
     self.images = images
 
     self.camtoworlds = poses[:, :3, :4]
+
+    test = poses[0, -1, -1]
 
     # intrinsic arr has H, W, fx, fy, cx, cy
     self.focal = poses[0, -1, -1] * 1. / factor
