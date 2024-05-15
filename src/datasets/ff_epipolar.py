@@ -498,8 +498,8 @@ class FFEpipolar(BaseDataset):
 
       ##WARUM??
       ## Convert R matrix from the form [up forward left] to [right up back]
-      #camtoworlds = np.concatenate(
-      #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      camtoworlds = np.concatenate(
+          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
 
@@ -507,22 +507,22 @@ class FFEpipolar(BaseDataset):
       self.min_depth = 420
       self.max_depth = 820
 
-      #scale = 1 / self.max_depth
+      scale = 1 / self.max_depth
 
-      #camtoworlds[:, :3, 3] *= scale
+      camtoworlds[:, :3, 3] *= scale
 
       # Transformation der Kamerakoordinaten definieren
-      #self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
-      #                               [0, 0, 0, 1]])
-      #self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+      self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
+                                     [0, 0, 0, 1]])
+      self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-      ## bds *= scale
-      #camtoworlds_copy = camtoworlds.copy()
-      #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-      #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+      #bds *= scale
+      camtoworlds_copy = camtoworlds.copy()
+      camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+      camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
-      #self.min_depth = scale * self.min_depth
-      #self.max_depth = scale * self.max_depth
+      self.min_depth = scale * self.min_depth
+      self.max_depth = scale * self.max_depth
 
       # self.min_depth = (self.min_depth,)
       # self.max_depth = (self.max_depth,)

@@ -188,8 +188,8 @@ class EvalXRAYEpipolar(FFEpipolar):
 ########################################################################################################################
 
     ## Convert R matrix from the form [up forward left] to [right up back]
-    #camtoworlds = np.concatenate(
-    #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+    camtoworlds = np.concatenate(
+        [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
     # # Use this to set the near and far plane
@@ -200,9 +200,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.min_depth = 420
     self.max_depth = 820
 
-    #scale = 1/self.max_depth
+    scale = 1/self.max_depth
 
-    #camtoworlds[:, :3, 3] *= scale
+    camtoworlds[:, :3, 3] *= scale
 
     # Transformation der Kamerakoordinaten definieren
     self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
@@ -210,9 +210,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
     ##bds *= scale
-    #camtoworlds_copy = camtoworlds.copy()
-    #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-    #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+    camtoworlds_copy = camtoworlds.copy()
+    camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+    camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
     factor_h = 976 / height
     factor_w = 976 / width
@@ -225,8 +225,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.intrinsic_matrix[1, 1] /= factor_h  # Fokallänge in y-Richtung
     self.intrinsic_matrix[1, 2] /= factor_h  # Hauptpunkt in y-Richtung
 
-    #self.min_depth = scale * self.min_depth
-    #self.max_depth = scale * self.max_depth
+    self.min_depth = scale * self.min_depth
+    self.max_depth = scale * self.max_depth
 
     #self.min_depth = (self.min_depth,)
     #self.max_depth = (self.max_depth,)
