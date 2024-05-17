@@ -261,11 +261,18 @@ class BaseDataset(threading.Thread):
     directions = (self.camtoworlds[:, None, None, :3, :3]
                   @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
 
-    test = self.camtoworlds[:, None, None, :3, -1]
+    test = self.camtoworlds[:, None, None, :3, :3]
 
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)
     viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
+
+    origins_path = '/home/andre/Schreibtisch/dataloader1/origins.npy'
+    viewdirs_path = '/home/andre/Schreibtisch/dataloader1/viewdirs.npy'
+
+    # Arrays speichern
+    np.save(origins_path, origins)
+    np.save(viewdirs_path, viewdirs)
 
     self.rays = data_types.Rays(origins=origins, directions=viewdirs)
 

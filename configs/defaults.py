@@ -229,7 +229,7 @@ def get_train_config():
   train_config = ml_collections.ConfigDict()
 
   train_config.pretrain_dir = ""
-  train_config.switch_scene_iter = 2400000000
+  train_config.switch_scene_iter = 500
   train_config.scheduler = "linear"
   train_config.lr_init = 3.0e-5
   train_config.warmup_epochs = 2

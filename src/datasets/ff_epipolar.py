@@ -264,6 +264,39 @@ class FFEpipolar(BaseDataset):
 
     return return_batch
 
+  def load_1tif(self, imgdir): #load_1tif
+
+      # Suchen der .tif Datei im angegebenen Verzeichnis
+      tif_path = None
+      for file_name in os.listdir(imgdir):
+          if file_name.endswith('.tif'):
+              tif_path = os.path.join(imgdir, file_name)
+              break
+      if tif_path is None:
+          raise FileNotFoundError("Keine .tif Datei im angegebenen Verzeichnis gefunden")
+
+      # Laden der .tif Datei
+      images = tiff.imread(tif_path)
+
+      # Anzahl der Bilder
+      num_images = images.shape[0]
+
+      # Prüfen, ob die Bilder Grauwerte sind und in RGB konvertieren
+      if len(images.shape) == 3:  # falls Grauwerte (num_images, height, width)
+          images = np.stack((images,) * 3, axis=-1)  # In RGB konvertieren (num_images, height, width, 3)
+
+      # Prüfen ob die Bilder Floating Point sind und zu uint8 konvertieren
+      if images.dtype == np.float32 or images.dtype == np.float64:
+          images = (255 * (images - np.min(images)) / (np.max(images) - np.min(images))).astype(np.uint8)
+
+      # Sicherstellen, dass die Form korrekt ist (num_images, height, width, 3)
+      if images.ndim == 4 and images.shape[-1] == 3:
+          print(f"Converted shape: {images.shape}")
+      else:
+          raise ValueError(f"Unexpected image shape after conversion: {images.shape}")
+
+      return images
+
   def _load_images_tif(self, imgdir, w, h):
       """Function to load all images.
 
@@ -389,7 +422,7 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
 
-      projection_matrices = projection_matrices[::10]
+      projection_matrices = projection_matrices[:20]
 
       #projection_matrices_array = np.array(projection_matrices)
 
@@ -443,12 +476,15 @@ class FFEpipolar(BaseDataset):
       #xray_image_width = 976
       #xray_image_height = 976
 
-      images = self._load_images_tif(imgdir, args.dataset.xray_image_height,
-                                     args.dataset.xray_image_height)
+      #images = self._load_images_tif(imgdir, args.dataset.xray_image_height,
+      #                               args.dataset.xray_image_height)
+
+      images = self.load_1tif(imgdir)
+      images = images[:20,:,:]
       print("images shape: ", images.shape)
 
       # Transpose such that the first dimension is number of images
-      images = np.moveaxis(images, -1, 0)
+      #images = np.moveaxis(images, -1, 0)
 
       if args.model.num_rgb_channels == 3:
         # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
