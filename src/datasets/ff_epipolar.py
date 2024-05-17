@@ -458,15 +458,15 @@ class FFEpipolar(BaseDataset):
       # Bilder laden #####################################################################################################
 
       basedir = path.join(args.dataset.xray_base_dir, self.scene)
-
+      print("basedir: ", basedir)
       img0 = [
           os.path.join(basedir, "images", f)
           for f in sorted(file_utils.listdir(os.path.join(basedir, "images")))
           if f.endswith("tif")
       ][0]
-
+      print("467")
       assert Path(img0).is_file()
-
+      print("469")
       with file_utils.open_file(img0, 'rb') as f:
           # sh = imageio.imread(f).shape
           img = imageio.imread(f)
