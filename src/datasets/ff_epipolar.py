@@ -467,13 +467,13 @@ class FFEpipolar(BaseDataset):
       print("467")
       assert Path(img0).is_file()
       print("469")
-      with file_utils.open_file(img0, 'rb') as f:
-          # sh = imageio.imread(f).shape
-          img = imageio.imread(f)
-          sh = img.shape
-      if sh[0] / sh[
-          1] != args.dataset.xray_image_height / args.dataset.xray_image_width:
-          raise ValueError("not expected height width ratio")
+      #with file_utils.open_file(img0, 'rb') as f:
+      #    # sh = imageio.imread(f).shape
+      #    img = imageio.imread(f)
+      #    sh = img.shape
+      #if sh[0] / sh[
+      #    1] != args.dataset.xray_image_height / args.dataset.xray_image_width:
+      #    raise ValueError("not expected height width ratio")
 
       imgdir = os.path.join(basedir, "images")
 
@@ -490,14 +490,14 @@ class FFEpipolar(BaseDataset):
       # Transpose such that the first dimension is number of images
       #images = np.moveaxis(images, -1, 0)
 
-      if args.model.num_rgb_channels == 3:
-        # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
-        # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
-        images = np.expand_dims(images, axis=-1)
-        # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
-        images = np.repeat(images, 3, axis=-1)
+      #if args.model.num_rgb_channels == 3:
+      #  # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
+      #  # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
+      #  images = np.expand_dims(images, axis=-1)
+      #  # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
+      #  images = np.repeat(images, 3, axis=-1)
 
-      images = images.astype(np.uint8)
+      #images = images.astype(np.uint8)
 
       self.h, self.w = images.shape[1:3]
       self.resolution = self.h * self.w
