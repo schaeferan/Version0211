@@ -266,6 +266,8 @@ class FFEpipolar(BaseDataset):
 
   def load_1tif(self, imgdir): #load_1tif
 
+      print("in load_1tif")
+
       # Suchen der .tif Datei im angegebenen Verzeichnis
       tif_path = None
       for file_name in os.listdir(imgdir):
@@ -294,6 +296,8 @@ class FFEpipolar(BaseDataset):
           print(f"Converted shape: {images.shape}")
       else:
           raise ValueError(f"Unexpected image shape after conversion: {images.shape}")
+
+      print("aus load_1tif")
 
       return images
 
