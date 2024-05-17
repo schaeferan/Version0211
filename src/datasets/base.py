@@ -267,12 +267,11 @@ class BaseDataset(threading.Thread):
                               directions.shape)
     viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
 
-    origins_path = '/home/andre/Schreibtisch/dataloader1/origins.npy'
-    viewdirs_path = '/home/andre/Schreibtisch/dataloader1/viewdirs.npy'
-
-    # Arrays speichern
-    np.save(origins_path, origins)
-    np.save(viewdirs_path, viewdirs)
+    #origins_path = '/home/andre/Schreibtisch/dataloader1/origins.npy'
+    #viewdirs_path = '/home/andre/Schreibtisch/dataloader1/viewdirs.npy'
+    ## Arrays speichern
+    #np.save(origins_path, origins)
+    #np.save(viewdirs_path, viewdirs)
 
     self.rays = data_types.Rays(origins=origins, directions=viewdirs)
 
