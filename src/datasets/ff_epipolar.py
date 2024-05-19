@@ -389,7 +389,7 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
 
-      projection_matrices = projection_matrices[::10]
+      #projection_matrices = projection_matrices[::10]
 
       #projection_matrices_array = np.array(projection_matrices)
 
@@ -496,10 +496,10 @@ class FFEpipolar(BaseDataset):
 
       camtoworlds = extrinsic_matrices
 
-      ##WARUM??
-      ## Convert R matrix from the form [up forward left] to [right up back]
-      #camtoworlds = np.concatenate(
-      #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      #WARUM??
+      # Convert R matrix from the form [up forward left] to [right up back]
+      camtoworlds = np.concatenate(
+          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
 
