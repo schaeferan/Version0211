@@ -197,3 +197,26 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.projection_matrices = projection_matrices
 
     self.n_examples = images.shape[0]
+
+  def _generate_rays(self):
+
+    pixel_center = 0.0
+    x, y = np.meshgrid(  # pylint: disable=unbalanced-tuple-unpacking
+      np.arange(self.w, dtype=np.float32) + pixel_center,  # X-Axis (columns)
+      np.arange(self.h, dtype=np.float32) + pixel_center,  # Y-Axis (rows)
+      indexing="xy")
+
+    pixels = np.stack((x, y, np.ones_like(x)), axis=-1)
+    inverse_intrisics = np.linalg.inv(self.intrinsic_matrix[Ellipsis, :3, :3])
+
+    # camera_dirs sind Richtungsvektoren im Kamerakoordinatensystem, und sie repräsentieren die Richtungen von der Kamera zu den Pixeln auf dem Bild.
+    camera_dirs = (inverse_intrisics[None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
+
+    # directions sind die gleichen Richtungsvektoren, jedoch nach der Transformation in Weltkoordinaten, um die Szene zu repräsentieren.
+    directions = (self.camtoworlds[:, None, None, :3, :3]
+                  @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
+
+    origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
+                              directions.shape)
+
+    self.rays = data_types.Rays(origins=origins, directions=directions)
