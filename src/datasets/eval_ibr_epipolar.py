@@ -83,15 +83,27 @@ class EvalIBREpipolar(FFEpipolar):
     poses = poses_arr[:, :-2].reshape([-1, 3, 5]).transpose([1, 2, 0])
     bds = poses_arr[:, -2:].transpose([1, 0])
 
+    #file_path = '/home/andre/Schreibtisch/dataloader1/poses.npy'
+    ## Speichern des Arrays als .npy-Datei
+    #np.save(file_path, poses)
+
     #reshaped_array = np.moveaxis(poses, -1, 0).astype(np.float32)
+
+    #test = np.moveaxis(poses, -1, 0).astype(np.float32)
 
     # Convert R matrix from the form [down right back] to [right up back]
     poses = np.concatenate(
         [poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
 
+    #file_path2 = '/home/andre/Schreibtisch/dataloader1/poses2.npy'
+    ## Speichern des Arrays als .npy-Datei
+    #np.save(file_path2, poses)
+
     # Transpose such that the first dimension is number of images
     images = np.moveaxis(images, -1, 0)
     poses = np.moveaxis(poses, -1, 0).astype(np.float32)
+
+
     bds = np.moveaxis(bds, -1, 0).astype(np.float32)
 
     if args.dataset.normalize:
