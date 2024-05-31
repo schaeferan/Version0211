@@ -586,9 +586,6 @@ class FFEpipolar(BaseDataset):
       camtoworlds = camtoworlds[indices]
       print("poses shape[0]: ", camtoworlds.shape[0])
 
-      #projection_matrices = np.array(projection_matrices)
-      projection_matrices = projection_matrices[indices]
-
       #first5  = images[:5, :, :, :]
       #output_folder = "/home/woody/iwi5/iwi5143h"
       #filename = os.path.join(output_folder, "first5.tiff")
@@ -596,7 +593,6 @@ class FFEpipolar(BaseDataset):
 
       self.images = images
       self.camtoworlds = camtoworlds
-      self.projection_matrices = projection_matrices
 
       self.n_examples = images.shape[0]
     
