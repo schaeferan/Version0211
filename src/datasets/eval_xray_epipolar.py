@@ -195,7 +195,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.n_examples = images.shape[0]
 
   def _generate_rays(self):
-
+    print("198 in eval_xray")
     pixel_center = 0.5
     x, y = np.meshgrid(  # pylint: disable=unbalanced-tuple-unpacking
       np.arange(self.w, dtype=np.float32) + pixel_center,  # X-Axis (columns)
