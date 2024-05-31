@@ -30,13 +30,16 @@ def parse_projection_matrices(xml_file_path):
                 else:
                     print(f"Matrix {len(matrices) + 1} hat nicht die erwartete Form (12, 1).")
 
+            # Konvertieren Sie die Liste von Matrizen in ein 3D-Array
+            matrices_3d = np.array(matrices)
+
             # Zum Speichern der NumPy-Arrays in einer Datei (z.B. im .npy-Format)
             # np.savez('/Pfad/zum/Speichern/der/Arrays', *matrices)
 
         else:
             print("Das Element 'projectionMatrices' wurde nicht gefunden.")
 
-        return matrices  # Geben Sie die Liste der Matrizen zurück
+        return matrices_3d  # Geben Sie die Liste der Matrizen zurück
 
     except Exception as e:
         print(f"Fehler beim Parsen der XML-Datei: {str(e)}")
