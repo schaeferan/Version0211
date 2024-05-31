@@ -464,21 +464,30 @@ class FFEpipolar(BaseDataset):
       self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
                                         [0, 3934.43, 488, 0],
                                         [0, 0, 1, 0]]).astype(np.float32)
-      extrinsic_matrices = []
-      for P in projection_matrices:
-          K = self.intrinsic_matrix[:, :3]
-          # Zerlege die Projektionsmatrix P in [R | t]
-          K_inverse = np.linalg.inv(K)
-          [R, t] = np.dot(K_inverse, P)[:3, :].copy(), np.dot(K_inverse, P)[:3, 3].copy()
+      ########################################################################################################################
+      # CALCULATION OF [R|T]
 
-          extrinsic_matrices.append(R)
+      # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+      # # Extrahiere die intrinsische Matrix
+      K = self.intrinsic_matrix[:, :3]
+      # # Berechne die inverse intrinsische Matrix einmalig
+      K_inverse = np.linalg.inv(K)
+      RT = np.matmul(K_inverse, projection_matrices)
+      # Extrahiere die Rotationsmatrix R
+      R = RT[:, :, :3]
+      # Extrahiere die Translationsmatrix t
+      t = RT[:, :, 3]
+      ###############################################################################
+      R_c2w = np.transpose(R, axes=(0, 2, 1))
+      # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
+      t_expanded = np.expand_dims(t, axis=2)
+      # Matrix-Vektor-Multiplikation
+      result = -np.matmul(R_c2w, t_expanded)
+      # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
+      t_c2w = np.squeeze(result, axis=2)
 
-      extrinsics_array = np.array(extrinsic_matrices)
-      camtoworlds = extrinsics_array
-
-      # Convert R matrix from the form [up forward left] to [right up back]
-      camtoworlds = np.concatenate(
-          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      camtoworlds = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
+      ##################################################################################################################
 
       # Get the min and max depth of the scene
       self.min_depth = 420
@@ -548,9 +557,6 @@ class FFEpipolar(BaseDataset):
       camtoworlds = camtoworlds[indices]
       print("poses shape[0]: ", camtoworlds.shape[0])
 
-      projection_matrices = np.array(projection_matrices)
-      projection_matrices = projection_matrices[indices]
-
       #first5  = images[:5, :, :, :]
       #output_folder = "/home/woody/iwi5/iwi5143h"
       #filename = os.path.join(output_folder, "first5.tiff")
@@ -558,7 +564,7 @@ class FFEpipolar(BaseDataset):
 
       self.images = images
       self.camtoworlds = camtoworlds
-      self.projection_matrices = projection_matrices
+
 
       self.n_examples = images.shape[0]
     
