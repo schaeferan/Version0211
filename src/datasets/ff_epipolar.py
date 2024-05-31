@@ -674,8 +674,9 @@ class FFEpipolar(BaseDataset):
       n_render_poses = self.render_poses.shape[0]
       self.camtoworlds = np.concatenate([self.render_poses, self.camtoworlds],
                                         axis=0)
-
+    print("FFE_EPI: Z677")
     super()._generate_rays()
+    print("FFE_EPI: Z679")
 
     # Split poses from the dataset and generated poses
     if self.split == "test":
