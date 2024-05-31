@@ -480,26 +480,21 @@ class FFEpipolar(BaseDataset):
       # camtoworlds = extrinsics_array
 
       ########################################################
-      # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-      # # Extrahiere die intrinsische Matrix
-      K = self.intrinsic_matrix[:, :3]
-      # # Berechne die inverse intrinsische Matrix einmalig
-      K_inverse = np.linalg.inv(K)
-      RT = np.matmul(K_inverse, projection_matrices)
-      # Extrahiere die Rotationsmatrix R
-      R2 = RT[:, :, :3]
-      # Extrahiere die Translationsmatrix t
-      t2 = RT[:, :, 3]
-      # Erstelle die extrinsischen Matrizen als 3D-Matrix
-      extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
+      # # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+      # # # Extrahiere die intrinsische Matrix
+      # K = self.intrinsic_matrix[:, :3]
+      # # # Berechne die inverse intrinsische Matrix einmalig
+      # K_inverse = np.linalg.inv(K)
+      # RT = np.matmul(K_inverse, projection_matrices)
+      # # Extrahiere die Rotationsmatrix R
+      # R2 = RT[:, :, :3]
+      # # Extrahiere die Translationsmatrix t
+      # t2 = RT[:, :, 3]
+      # # Erstelle die extrinsischen Matrizen als 3D-Matrix
+      # extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
       #################################################################
 
-      camtoworlds = extrinsic_matrices
 
-      #WARUM??
-      # Convert R matrix from the form [up forward left] to [right up back]
-      camtoworlds = np.concatenate(
-          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
 
@@ -516,10 +511,10 @@ class FFEpipolar(BaseDataset):
                                      [0, 0, 0, 1]])
       self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-      #bds *= scale
-      camtoworlds_copy = camtoworlds.copy()
-      camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-      camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+      ##bds *= scale
+      #camtoworlds_copy = camtoworlds.copy()
+      #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+      #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
       self.min_depth = scale * self.min_depth
       self.max_depth = scale * self.max_depth
@@ -710,9 +705,10 @@ class FFEpipolar(BaseDataset):
                                         axis=0)
 
     super()._generate_rays()
-
+    print("ff_epi: Z713")
     # Split poses from the dataset and generated poses
     if self.split == "test":
+      print("ff_epi: Z716")
       self.camtoworlds = self.camtoworlds[n_render_poses:]
       split_origins = np.split(self.rays.origins, [n_render_poses], 0)
       split_directions = np.split(self.rays.directions, [n_render_poses], 0)
