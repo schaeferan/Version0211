@@ -620,9 +620,19 @@ class FFEpipolar(BaseDataset):
     poses = poses_arr[:, :-2].reshape([-1, 3, 5]).transpose([1, 2, 0])
     bds = poses_arr[:, -2:].transpose([1, 0])
 
+    # # Pfad zum Speichern der Datei
+    # file_path = "/home/andre/Schreibtisch/dataloader1/poses_raw.npy"
+    # # Speichern des Arrays als .npy-Datei
+    # np.save(file_path, poses)
+
     # Convert R matrix from the form [down right back] to [right up back]
     poses = np.concatenate(
-        [poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
+       [poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
+
+    # # Pfad zum Speichern der Datei
+    # file_path = "/home/andre/Schreibtisch/dataloader1/poses_swap.npy"
+    # # Speichern des Arrays als .npy-Datei
+    # np.save(file_path, poses)
 
     # Transpose such that the first dimension is number of images
     images = np.moveaxis(images, -1, 0)
@@ -637,6 +647,11 @@ class FFEpipolar(BaseDataset):
     poses[:, :3, 3] *= scale
     bds *= scale
     poses = pose_utils.recenter_poses(poses, self.cam_transform)
+    #
+    # # Pfad zum Speichern der Datei
+    # file_path = "/home/andre/Schreibtisch/dataloader1/poses_final.npy"
+    # # Speichern des Arrays als .npy-Datei
+    # np.save(file_path, poses)
 
     # Get the min and max depth of the scene
     self.min_depth = np.array([bds.min()])
