@@ -261,7 +261,7 @@ class BaseDataset(threading.Thread):
     directions = (self.camtoworlds[:, None, None, :3, :3]
                   @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
 
-    test = self.camtoworlds[:, None, None, :3, -1]
+    #test = self.camtoworlds[:, None, None, :3, -1]
 
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)

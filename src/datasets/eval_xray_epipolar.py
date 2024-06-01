@@ -289,7 +289,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     #
     # #viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
 
-    pixel_center = 0.0
+    pixel_center = 0.5
     x, y = np.meshgrid(  # pylint: disable=unbalanced-tuple-unpacking
       np.arange(self.w, dtype=np.float32) + pixel_center,  # X-Axis (columns)
       np.arange(self.h, dtype=np.float32) + pixel_center,  # Y-Axis (rows)
@@ -308,4 +308,6 @@ class EvalXRAYEpipolar(FFEpipolar):
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)
 
-    self.rays = data_types.Rays(origins=origins, directions=directions)
+    viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
+
+    self.rays = data_types.Rays(origins=origins, directions=viewdirs)

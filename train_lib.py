@@ -21,7 +21,7 @@ import os
 from typing import Any, Callable, Tuple
 
 from absl import logging
-
+from skimage import metrics as skmetrics
 from clu import metric_writers
 from clu import metrics
 from clu import periodic_actions
