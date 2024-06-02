@@ -393,7 +393,7 @@ class FFEpipolar(BaseDataset):
       # Erzeuge das zweite Array mit den restlichen Elementen
       mask = np.ones(len(projection_matrices), dtype=bool)
       mask[::10] = False
-      matrices_3d = projection_matrices[mask]
+      projection_matrices = projection_matrices[mask]
 
 
       # # Liste 1 mit den spezifizierten Indexpositionen
