@@ -466,6 +466,27 @@ class FFEpipolar(BaseDataset):
       self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
                                         [0, 3934.43, 488, 0],
                                         [0, 0, 1, 0]]).astype(np.float32)
+      # CALCULATION OF [R|T]
+      # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+      # # Extrahiere die intrinsische Matrix
+      K = self.intrinsic_matrix[:, :3]
+      # # Berechne die inverse intrinsische Matrix einmalig
+      K_inverse = np.linalg.inv(K)
+      RT = np.matmul(K_inverse, projection_matrices)
+      # Extrahiere die Rotationsmatrix R
+      R = RT[:, :, :3]
+      # Extrahiere die Translationsmatrix t
+      t = RT[:, :, 3]
+      ###############################################################################
+      R_c2w = np.transpose(R, axes=(0, 2, 1))
+      # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
+      t_expanded = np.expand_dims(t, axis=2)
+      # Matrix-Vektor-Multiplikation
+      result = -np.matmul(R_c2w, t_expanded)
+      # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
+      t_c2w = np.squeeze(result, axis=2)
+
+      camtoworlds = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
 
       ## Convert R matrix from the form [up forward left] to [right up back]
