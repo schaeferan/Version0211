@@ -392,7 +392,7 @@ class FFEpipolar(BaseDataset):
 
       # Erzeuge das zweite Array mit den restlichen Elementen
       mask = np.ones(len(projection_matrices), dtype=bool)
-      mask[::10] = False
+      mask[:20] = False
       projection_matrices = projection_matrices[mask]
 
 

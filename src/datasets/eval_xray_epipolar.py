@@ -38,7 +38,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     projection_matrices = parse_projection_matrices(xml_file_path)
 
     # Erzeuge das erste Array mit jedem 10. Element
-    projection_matrices = projection_matrices[::10]
+    projection_matrices = projection_matrices[:20]
 
 
 
