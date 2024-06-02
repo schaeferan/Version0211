@@ -387,7 +387,7 @@ class FFEpipolar(BaseDataset):
       #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
       xml_file_path = args.dataset.XML_dir
 
-      #projection_matrices = parse_projection_matrices(xml_file_path)
+      projection_matrices = parse_projection_matrices(xml_file_path)
       ##projection_matrices_array = np.array(projection_matrices)
 
       ## Erzeuge das zweite Array mit den restlichen Elementen
