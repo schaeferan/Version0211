@@ -259,12 +259,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     print(images.shape)
     camtoworlds = camtoworlds[indices]
     print(camtoworlds.shape)
-    #projection_matrices = np.array(projection_matrices)
-    projection_matrices = projection_matrices[indices]
 
     self.images = images
     self.camtoworlds = camtoworlds
-    self.projection_matrices = projection_matrices
 
     self.n_examples = images.shape[0]
 
