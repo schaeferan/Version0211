@@ -426,7 +426,9 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
 
-      projection_matrices = projection_matrices[:20]
+      number = 20
+
+      projection_matrices = projection_matrices[:number]
 
       #projection_matrices_array = np.array(projection_matrices)
 
@@ -484,7 +486,7 @@ class FFEpipolar(BaseDataset):
       #                               args.dataset.xray_image_height)
 
       images = self.load_1tif(imgdir)
-      images = images[:20,:,:]
+      images = images[:number,:,:]
       print("images shape: ", images.shape)
 
       # Transpose such that the first dimension is number of images
@@ -519,27 +521,26 @@ class FFEpipolar(BaseDataset):
       # extrinsics_array = np.array(extrinsic_matrices)
       # camtoworlds = extrinsics_array
 
-      ########################################################
-      # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-      # # Extrahiere die intrinsische Matrix
-      K = self.intrinsic_matrix[:, :3]
-      # # Berechne die inverse intrinsische Matrix einmalig
-      K_inverse = np.linalg.inv(K)
-      RT = np.matmul(K_inverse, projection_matrices)
-      # Extrahiere die Rotationsmatrix R
-      R2 = RT[:, :, :3]
-      # Extrahiere die Translationsmatrix t
-      t2 = RT[:, :, 3]
-      # Erstelle die extrinsischen Matrizen als 3D-Matrix
-      extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
-      #################################################################
-
-      camtoworlds = extrinsic_matrices
+      # ########################################################
+      # # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+      # # # Extrahiere die intrinsische Matrix
+      # K = self.intrinsic_matrix[:, :3]
+      # # # Berechne die inverse intrinsische Matrix einmalig
+      # K_inverse = np.linalg.inv(K)
+      # RT = np.matmul(K_inverse, projection_matrices)
+      # # Extrahiere die Rotationsmatrix R
+      # R2 = RT[:, :, :3]
+      # # Extrahiere die Translationsmatrix t
+      # t2 = RT[:, :, 3]
+      # # Erstelle die extrinsischen Matrizen als 3D-Matrix
+      # extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
+      # #################################################################
+      # camtoworlds = extrinsic_matrices
 
       #WARUM??
-      # Convert R matrix from the form [up forward left] to [right up back]
-      camtoworlds = np.concatenate(
-          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      ## Convert R matrix from the form [up forward left] to [right up back]
+      #camtoworlds = np.concatenate(
+      #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
 
@@ -551,15 +552,15 @@ class FFEpipolar(BaseDataset):
 
       camtoworlds[:, :3, 3] *= scale
 
-      # Transformation der Kamerakoordinaten definieren
-      self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
-                                     [0, 0, 0, 1]])
-      self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+      ## Transformation der Kamerakoordinaten definieren
+      #self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
+      #                               [0, 0, 0, 1]])
+      #self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-      #bds *= scale
-      camtoworlds_copy = camtoworlds.copy()
-      camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-      camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+      ##bds *= scale
+      #camtoworlds_copy = camtoworlds.copy()
+      #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+      #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
       self.min_depth = scale * self.min_depth
       self.max_depth = scale * self.max_depth
@@ -611,8 +612,6 @@ class FFEpipolar(BaseDataset):
       camtoworlds = camtoworlds[indices]
       print("poses shape[0]: ", camtoworlds.shape[0])
 
-      #projection_matrices = np.array(projection_matrices)
-      projection_matrices = projection_matrices[indices]
 
       #first5  = images[:5, :, :, :]
       #output_folder = "/home/woody/iwi5/iwi5143h"
@@ -621,7 +620,6 @@ class FFEpipolar(BaseDataset):
 
       self.images = images
       self.camtoworlds = camtoworlds
-      self.projection_matrices = projection_matrices
 
       self.n_examples = images.shape[0]
     

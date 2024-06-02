@@ -167,29 +167,29 @@ class EvalXRAYEpipolar(FFEpipolar):
     # extrinsics_array = np.array(extrinsic_matrices)
     # camtoworlds = extrinsics_array
 
-    ########################################################
-    # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-    # # Extrahiere die intrinsische Matrix
-    K = self.intrinsic_matrix[:, :3]
-    # # Berechne die inverse intrinsische Matrix einmalig
-    K_inverse = np.linalg.inv(K)
-    RT = np.matmul(K_inverse, projection_matrices)
-    # Extrahiere die Rotationsmatrix R
-    R2 = RT[:, :, :3]
-    # Extrahiere die Translationsmatrix t
-    t2 = RT[:, :, 3]
-    # Erstelle die extrinsischen Matrizen als 3D-Matrix
-    extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
-    #################################################################
-
-    camtoworlds = extrinsic_matrices
+    # ########################################################
+    # # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+    # # # Extrahiere die intrinsische Matrix
+    # K = self.intrinsic_matrix[:, :3]
+    # # # Berechne die inverse intrinsische Matrix einmalig
+    # K_inverse = np.linalg.inv(K)
+    # RT = np.matmul(K_inverse, projection_matrices)
+    # # Extrahiere die Rotationsmatrix R
+    # R2 = RT[:, :, :3]
+    # # Extrahiere die Translationsmatrix t
+    # t2 = RT[:, :, 3]
+    # # Erstelle die extrinsischen Matrizen als 3D-Matrix
+    # extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
+    # #################################################################
+    #
+    # camtoworlds = extrinsic_matrices
 
 
 ########################################################################################################################
 
-    # Convert R matrix from the form [up forward left] to [right up back]
-    camtoworlds = np.concatenate(
-        [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+    ## Convert R matrix from the form [up forward left] to [right up back]
+    #camtoworlds = np.concatenate(
+    #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
 
     # # Use this to set the near and far plane
@@ -209,10 +209,10 @@ class EvalXRAYEpipolar(FFEpipolar):
                                    [0, 0, 0, 1]])
     self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-    ##bds *= scale
-    camtoworlds_copy = camtoworlds.copy()
-    camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-    camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+    ###bds *= scale
+    #camtoworlds_copy = camtoworlds.copy()
+    #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+    #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
     factor_h = 976 / height
     factor_w = 976 / width
@@ -260,13 +260,10 @@ class EvalXRAYEpipolar(FFEpipolar):
     print(images.shape)
     camtoworlds = camtoworlds[indices]
     print(camtoworlds.shape)
-    #projection_matrices = np.array(projection_matrices)
-    projection_matrices = projection_matrices[indices]
+
 
     self.images = images
     self.camtoworlds = camtoworlds
-    self.projection_matrices = projection_matrices
-
     self.n_examples = images.shape[0]
 
   def _generate_rays(self):
@@ -309,7 +306,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     #
     # #viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
 
-    pixel_center = 0.0
+    pixel_center = 0.5
     x, y = np.meshgrid(  # pylint: disable=unbalanced-tuple-unpacking
       np.arange(self.w, dtype=np.float32) + pixel_center,  # X-Axis (columns)
       np.arange(self.h, dtype=np.float32) + pixel_center,  # Y-Axis (rows)
@@ -328,4 +325,6 @@ class EvalXRAYEpipolar(FFEpipolar):
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)
 
-    self.rays = data_types.Rays(origins=origins, directions=directions)
+    viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
+
+    self.rays = data_types.Rays(origins=origins, directions=viewdirs)
