@@ -461,21 +461,11 @@ class FFEpipolar(BaseDataset):
       self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
                                         [0, 3934.43, 488, 0],
                                         [0, 0, 1, 0]]).astype(np.float32)
-      extrinsic_matrices = []
-      for P in projection_matrices:
-          K = self.intrinsic_matrix[:, :3]
-          # Zerlege die Projektionsmatrix P in [R | t]
-          K_inverse = np.linalg.inv(K)
-          [R, t] = np.dot(K_inverse, P)[:3, :].copy(), np.dot(K_inverse, P)[:3, 3].copy()
 
-          extrinsic_matrices.append(R)
 
-      extrinsics_array = np.array(extrinsic_matrices)
-      camtoworlds = extrinsics_array
-
-      # Convert R matrix from the form [up forward left] to [right up back]
-      camtoworlds = np.concatenate(
-          [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
+      ## Convert R matrix from the form [up forward left] to [right up back]
+      #camtoworlds = np.concatenate(
+      #    [-camtoworlds[:, 2:3, :], camtoworlds[:, 0:1, :], -camtoworlds[:, 1:2, :]], 1)
 
       # Get the min and max depth of the scene
       self.min_depth = 420
@@ -485,15 +475,15 @@ class FFEpipolar(BaseDataset):
 
       camtoworlds[:, :3, 3] *= scale
 
-      # Transformation der Kamerakoordinaten definieren
-      self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
-                                     [0, 0, 0, 1]])
-      self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+      ## Transformation der Kamerakoordinaten definieren
+      #self.cam_transform = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0],
+      #                               [0, 0, 0, 1]])
+      #self.cam_transform_3x3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-      # bds *= scale
-      camtoworlds_copy = camtoworlds.copy()
-      camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
-      camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
+      ## bds *= scale
+      #camtoworlds_copy = camtoworlds.copy()
+      #camtoworlds_copy = pose_utils.recenter_poses(camtoworlds, None)
+      #camtoworlds = pose_utils.recenter_poses(camtoworlds, self.cam_transform)
 
       self.min_depth = scale * self.min_depth
       self.max_depth = scale * self.max_depth
@@ -545,9 +535,6 @@ class FFEpipolar(BaseDataset):
       camtoworlds = camtoworlds[indices]
       print("poses shape[0]: ", camtoworlds.shape[0])
 
-      projection_matrices = np.array(projection_matrices)
-      projection_matrices = projection_matrices[indices]
-
       #first5  = images[:5, :, :, :]
       #output_folder = "/home/woody/iwi5/iwi5143h"
       #filename = os.path.join(output_folder, "first5.tiff")
@@ -555,7 +542,7 @@ class FFEpipolar(BaseDataset):
 
       self.images = images
       self.camtoworlds = camtoworlds
-      self.projection_matrices = projection_matrices
+
 
       self.n_examples = images.shape[0]
     
