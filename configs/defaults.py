@@ -234,7 +234,7 @@ def get_train_config():
   train_config.lr_init = 3.0e-5
   train_config.warmup_epochs = 2
   train_config.weight_decay = 0.
-  train_config.warmup_steps = 1000
+  train_config.warmup_steps = 100
   train_config.lr_final = 2.0e-5
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
@@ -242,14 +242,14 @@ def get_train_config():
   train_config.lr_delay_mult = 0.08
 
   # The gradient clipping magnitude (disabled if == 0).
-  train_config.step_factor = 10
+  train_config.step_factor = 6
   train_config.grad_max_norm = 0
   train_config.grad_max_val = 0
   train_config.max_steps = 20000 * train_config.step_factor
   train_config.num_epochs = train_config.step_factor
   train_config.checkpoint_every_steps = 20000
   train_config.log_loss_every_steps = 100
-  train_config.render_every_steps = 40000
+  train_config.render_every_steps = 10000
   train_config.gc_every_steps = 1000
 
   return train_config
