@@ -387,13 +387,13 @@ class FFEpipolar(BaseDataset):
       #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
       xml_file_path = args.dataset.XML_dir
 
-      projection_matrices = parse_projection_matrices(xml_file_path)
-      #projection_matrices_array = np.array(projection_matrices)
+      #projection_matrices = parse_projection_matrices(xml_file_path)
+      ##projection_matrices_array = np.array(projection_matrices)
 
-      # Erzeuge das zweite Array mit den restlichen Elementen
-      mask = np.ones(len(projection_matrices), dtype=bool)
-      mask[:20] = False
-      projection_matrices = projection_matrices[mask]
+      ## Erzeuge das zweite Array mit den restlichen Elementen
+      #mask = np.ones(len(projection_matrices), dtype=bool)
+      #mask[:20] = False
+      #projection_matrices = projection_matrices[mask]
 
 
       # # Liste 1 mit den spezifizierten Indexpositionen
@@ -404,7 +404,7 @@ class FFEpipolar(BaseDataset):
       # projection_matrices = liste_2
 
       #projection_matrices = projection_matrices[9:11]
-      #projection_matrices = projection_matrices[:89] + projection_matrices[109:]
+      projection_matrices = projection_matrices[:89] + projection_matrices[109:]
       #projection_matrices = projection_matrices[89:91]
       #projection_matrices = projection_matrices[:args.dataset.eval_length]
       # self.projection_matrices = np.array(projection_matrices)
