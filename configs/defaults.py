@@ -92,6 +92,7 @@ def get_dataset_config():
   # Eval XRAY. Setze das Verzeichnis für die Evaluierung des Datensatzes "xray".
   #--------------------------------------------------------
   dataset_config.eval_xray_dir = ""
+  dataset_config.movie_dir = ""
   dataset_config.eval_length = 20
   dataset_config.eval_xray_image_height = 976
   dataset_config.eval_xray_image_width = 976

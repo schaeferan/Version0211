@@ -285,48 +285,47 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     self.images = images
     self.camtoworlds = camtoworlds
-
     self.n_examples = images.shape[0]
+
+    # CALCULATION OF [R|T]
+    # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+    # # Extrahiere die intrinsische Matrix
+    K = self.intrinsic_matrix[:, :3]
+    # # Berechne die inverse intrinsische Matrix einmalig
+    K_inverse = np.linalg.inv(K)
+    RT = np.matmul(K_inverse, projection_matrices[20:25])
+    # Extrahiere die Rotationsmatrix R
+    R = RT[:, :, :3]
+    # Extrahiere die Translationsmatrix t
+    t = RT[:, :, 3]
+    ###############################################################################
+    R_c2w = np.transpose(R, axes=(0, 2, 1))
+    # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
+    t_expanded = np.expand_dims(t, axis=2)
+    # Matrix-Vektor-Multiplikation
+    result = -np.matmul(R_c2w, t_expanded)
+    # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
+    t_c2w = np.squeeze(result, axis=2)
+
+    camtoworlds_movie = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
+
+    #self.render_poses = np.load(args.dataset.movie_dir)
+    self.render_poses = camtoworlds_movie
+
+    if args.dataset.render_path and self.split == "test":
+      self.n_examples = self.render_poses.shape[0]
+    else:
+      self.n_examples = images.shape[0]
+
+
+
 
   def _generate_rays(self):
 
-    # #self.projection_matrices = np.array(self.projection_matrices)
-    #
-    # #origins_pro = np.array([-np.linalg.inv(m[:3, :3]) @ m[:, 3] for m in self.projection_matrices])
-    # #directions = np.array([np.linalg.inv(m[:3, :3]) for m in self.projection_matrices])
-    #
-    # pixel_center = 0.0
-    # x, y = np.meshgrid(
-    #   np.arange(self.w, dtype=np.float32) + pixel_center,
-    #   np.arange(self.h, dtype=np.float32) + pixel_center,
-    #   indexing="xy"
-    # )
-    # pixels = np.stack((x, y, np.ones_like(x)), axis=-1)
-    #
-    # directions = []
-    #
-    # for m in self.projection_matrices:
-    #   #M = m[:3, :3]
-    #   #inv_ARR = np.linalg.inv(M)
-    #   directions.append((np.linalg.inv(m[:3, :3]) @ pixels.reshape(-1, 3).T).T)
-    #
-    # origins_pro = np.array([-np.linalg.inv(m[:3, :3]) @ m[:, 3] for m in self.projection_matrices])
-    # origins_pro = origins_pro[:, None, None, :]
-    # directions = np.array(directions).reshape(self.projection_matrices.shape[0], self.h, self.w, 3)
-    # #directions = (self.camtoworlds[:, None, None, :3, :3]
-    # #              @ directions[None, Ellipsis, None])[Ellipsis, 0]
-    # directions /= np.linalg.norm(directions, axis=-1, keepdims=True)
-    #
-    # origins = np.broadcast_to(origins_pro, directions.shape)
-    #
-    # ## Calculate the norms of the direction vectors along the last dimension
-    # #norms = np.linalg.norm(directions, axis=2)
-    # ## Normalize the direction vectors by dividing each element by its corresponding norm
-    # #normalized_directions = directions / norms[:, :, np.newaxis]
-    # ## Extract the direction vectors from the third column of each 3x3 matrix
-    # #normalized_directions = normalized_directions[:, :, 2]
-    #
-    # #viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
+    if self.split == "test":
+      n_render_poses = self.render_poses.shape[0]
+      self.camtoworlds = np.concatenate([self.render_poses, self.camtoworlds],
+                                        axis=0)
 
     pixel_center = 0.5
     x, y = np.meshgrid(  # pylint: disable=unbalanced-tuple-unpacking
@@ -350,3 +349,15 @@ class EvalXRAYEpipolar(FFEpipolar):
     viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
 
     self.rays = data_types.Rays(origins=origins, directions=viewdirs)
+
+    # Split poses from the dataset and generated poses
+    if self.split == "test":
+      self.camtoworlds = self.camtoworlds[n_render_poses:]
+      split_origins = np.split(self.rays.origins, [n_render_poses], 0)
+      split_directions = np.split(self.rays.directions, [n_render_poses], 0)
+
+      self.render_rays = data_types.Rays(
+          origins=split_origins[0], directions=split_directions[0])
+
+      self.rays = data_types.Rays(
+          origins=split_origins[1], directions=split_directions[1])
