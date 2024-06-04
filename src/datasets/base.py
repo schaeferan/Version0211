@@ -133,11 +133,13 @@ class BaseDataset(threading.Thread):
     #   self._load_renderings(args)#für das kleine "train" set für evaluation
     #   self._generate_rays()
 
-    if args.dataset.eval_dataset == "xray":
-      self._load_renderings_xray(args)# für das große train set für training
-    else:
-      self._load_renderings(args)
-    #print("für das große train set für training")
+    # if args.dataset.eval_dataset == "xray":
+    #   self._load_renderings_xray(args)# für das große train set für training
+    # else:
+    #   self._load_renderings(args)
+    # #print("für das große train set für training")
+
+    self._load_renderings(args)
     self._generate_rays()
       #
       # self._load_renderings(args)#für das kleine "train" set für evaluation
@@ -170,11 +172,12 @@ class BaseDataset(threading.Thread):
     Args:
         args: Experiment configuration.
     """
+    # if args.dataset.eval_dataset == "xray":
+    #   self._load_renderings_xray(args)
+    # else:
+    #   self._load_renderings(args)
     if args.dataset.eval_dataset == "xray":
       self._load_renderings_xray(args)
-    else:
-      self._load_renderings(args)
-
     self._generate_rays()
     self.it = 0
 
@@ -261,7 +264,7 @@ class BaseDataset(threading.Thread):
     directions = (self.camtoworlds[:, None, None, :3, :3]
                   @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
 
-    test = self.camtoworlds[:, None, None, :3, :3]
+    #test = self.camtoworlds[:, None, None, :3, :3]
 
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)
