@@ -48,6 +48,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     #projection_matrices = projection_matrices[::10]
     #projection_matrices = [element for element in projection_matrices if element not in removed_elements]
+    movie_matrices = projection_matrices[20:21]
     projection_matrices = projection_matrices[:20]
     #projection_matrices = projection_matrices[89:109]
     #self.projection_matrices = np.array(projection_matrices)
@@ -286,14 +287,14 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.images = images
     self.camtoworlds = camtoworlds
     self.n_examples = images.shape[0]
-
+####################################################################################################################
     # CALCULATION OF [R|T]
     # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
     # # Extrahiere die intrinsische Matrix
     K = self.intrinsic_matrix[:, :3]
     # # Berechne die inverse intrinsische Matrix einmalig
     K_inverse = np.linalg.inv(K)
-    RT = np.matmul(K_inverse, projection_matrices[20:25])
+    RT = np.matmul(K_inverse, movie_matrices)
     # Extrahiere die Rotationsmatrix R
     R = RT[:, :, :3]
     # Extrahiere die Translationsmatrix t
@@ -311,7 +312,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     #self.render_poses = np.load(args.dataset.movie_dir)
     self.render_poses = camtoworlds_movie
-
+    ###################################################################################################################
     if args.dataset.render_path and self.split == "test":
       self.n_examples = self.render_poses.shape[0]
     else:
