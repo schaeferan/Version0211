@@ -233,7 +233,7 @@ def get_train_config():
   train_config.scheduler = "linear"
   train_config.lr_init = 3.0e-5
   train_config.warmup_epochs = 2
-  train_config.weight_decay = 0.
+  train_config.weight_decay = 2e-4
   train_config.warmup_steps = 1000
   train_config.lr_final = 2.0e-5
   # train_config.lr_delay_steps = 2500
