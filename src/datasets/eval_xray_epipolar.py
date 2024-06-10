@@ -48,7 +48,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     #projection_matrices = projection_matrices[::10]
     #projection_matrices = [element for element in projection_matrices if element not in removed_elements]
-    movie_matrices = projection_matrices[20:21]
+    movie_matrices = projection_matrices[20:30]
     projection_matrices = projection_matrices[:20]
     #projection_matrices = projection_matrices[89:109]
     #self.projection_matrices = np.array(projection_matrices)
@@ -310,6 +310,8 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     camtoworlds_movie = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
+    camtoworlds_movie[:, :3, 3] *= scale
+
     #self.render_poses = np.load(args.dataset.movie_dir)
     self.render_poses = camtoworlds_movie
     ###################################################################################################################
@@ -317,8 +319,6 @@ class EvalXRAYEpipolar(FFEpipolar):
       self.n_examples = self.render_poses.shape[0]
     else:
       self.n_examples = images.shape[0]
-
-
 
 
   def _generate_rays(self):
