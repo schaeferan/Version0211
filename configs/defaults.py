@@ -195,7 +195,7 @@ def get_model_config():
   model_config.return_attn = False
 
   model_config.init_final_precision = "HIGH"
-  model_config.normalize_ref_image = False
+  model_config.normalize_ref_image = True
 
   # Predict RGB from interpolated features.
   model_config.predict_feature_rgb = True
