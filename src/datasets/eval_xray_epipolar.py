@@ -36,7 +36,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     xml_file_path = args.dataset.XML_dir
 
     projection_matrices = parse_projection_matrices(xml_file_path)
-
+    movie_path = "/home/andre/Schreibtisch/dataloaderxray/XRAY_movie_verification/eval_trajec2020.npy"
+    camtoworlds_movie = np.load(movie_path)
+    camtoworlds_movie = camtoworlds_movie[:30]
     #projection_matrices = projection_matrices[::10]
 
     # Liste 1 mit den spezifizierten Indexpositionen
@@ -48,7 +50,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     #projection_matrices = projection_matrices[::10]
     #projection_matrices = [element for element in projection_matrices if element not in removed_elements]
-    movie_matrices = projection_matrices[20:30]
+    #movie_matrices = projection_matrices[20:30]
     projection_matrices = projection_matrices[:20]
     #projection_matrices = projection_matrices[89:109]
     #self.projection_matrices = np.array(projection_matrices)
@@ -64,20 +66,6 @@ class EvalXRAYEpipolar(FFEpipolar):
     # Bilder laden #####################################################################################################
 
     basedir = path.join(args.dataset.eval_xray_dir, self.scene)
-
-#    img0 = [
-#        os.path.join(basedir, "images", f)
-#        for f in sorted(file_utils.listdir(os.path.join(basedir, "images")))
-#        if f.endswith("JPG") or f.endswith("jpg") or f.endswith("png")
-#    ][0]
-#    with file_utils.open_file(img0) as f:
-#      sh = imageio.imread(f).shape
-#    if sh[0] / sh[
-#        1] != args.dataset.ff_image_height / args.dataset.ff_image_width:
-#      raise ValueError("not expected height width ratio")
-
-#    factor = 1
-#    #factor = sh[0] / args.dataset.ff_image_height
 
     imgdir = basedir
 
@@ -105,52 +93,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.resolution = self.h * self.w
     self.images = images
     self.focal = 3934.43
-########################################################################################################################
-    # # Erstelle leere Listen, um intrinsische und extrinsische Parameter für jede Projektionsmatrix zu speichern
-    # intrinsics_list = []
-    # extrinsics_list = []
-    #
-    # for P in projection_matrices:
-    #   # # Wende SVD auf die Projektionsmatrix an
-    #   # U, S, Vt = svd(P)
-    #   #
-    #   # # Extrahiere die intrinsische Matrix K
-    #   # K = U[:, :3] @ np.diag(S[:3]) @ Vt[:3, :]
-    #   #
-    #   # # Extrahiere die extrinsische Matrix [R | T]
-    #   # R = U[:, :3]
-    #   # T = (1 / S[0]) * Vt[3, :]
-    #   #
-    #   # # Füge die intrinsischen und extrinsischen Parameter zur jeweiligen Liste hinzu
-    #   # intrinsics_list.append(K)
-    #   # extrinsics_list.append(np.hstack((R, T.reshape(3, 1))))
-    #
-    #   #########################################################################################################
-    #   # Extrahiere die intrinsische Matrix
-    #   K = P[:, :3]#Das ist doch nicht die intrinsic??
-    #
-    #   # Extrahiere die extrinsische Matrix [R | T]
-    #   R = np.linalg.inv(K) @ P[:, :3]
-    #   T = np.linalg.inv(K) @ P[:, 3]
-    #
-    #   # Füge die intrinsische und extrinsische Matrizen zur jeweiligen Liste hinzu
-    #   intrinsics_list.append(K)
-    #   extrinsics_list.append(np.hstack((R, T.reshape(3, 1))))
-    #   #########################################################################################################
-    #
-    #   #M = P[:3,:3]
-    #   #R2, Q2 = rq(M)
-    #
-    #   #K = R2
-    #   #R = Q2
-    #
-    #   #intrinsics_list.append(K)
-    #   #xtrinsics_list.append(R)
-    #
-    # # Konvertiere die Listen in NumPy-Arrays
-    # intrinsics_array = np.array(intrinsics_list)
-    # extrinsics_array = np.array(extrinsics_list)
-    # extrinsic_matrices.append(np.hstack((R, t.reshape(3, 1))))
+
 ########################################################################################################################
     self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
                                       [0, 3934.43, 488, 0],
@@ -288,27 +231,27 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.camtoworlds = camtoworlds
     self.n_examples = images.shape[0]
 ####################################################################################################################
-    # CALCULATION OF [R|T]
-    # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-    # # Extrahiere die intrinsische Matrix
-    K = self.intrinsic_matrix[:, :3]
-    # # Berechne die inverse intrinsische Matrix einmalig
-    K_inverse = np.linalg.inv(K)
-    RT = np.matmul(K_inverse, movie_matrices)
-    # Extrahiere die Rotationsmatrix R
-    R = RT[:, :, :3]
-    # Extrahiere die Translationsmatrix t
-    t = RT[:, :, 3]
-    ###############################################################################
-    R_c2w = np.transpose(R, axes=(0, 2, 1))
-    # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
-    t_expanded = np.expand_dims(t, axis=2)
-    # Matrix-Vektor-Multiplikation
-    result = -np.matmul(R_c2w, t_expanded)
-    # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
-    t_c2w = np.squeeze(result, axis=2)
-
-    camtoworlds_movie = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
+    # # CALCULATION OF [R|T]
+    # # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
+    # # # Extrahiere die intrinsische Matrix
+    # K = self.intrinsic_matrix[:, :3]
+    # # # Berechne die inverse intrinsische Matrix einmalig
+    # K_inverse = np.linalg.inv(K)
+    # RT = np.matmul(K_inverse, movie_matrices)
+    # # Extrahiere die Rotationsmatrix R
+    # R = RT[:, :, :3]
+    # # Extrahiere die Translationsmatrix t
+    # t = RT[:, :, 3]
+    # ###############################################################################
+    # R_c2w = np.transpose(R, axes=(0, 2, 1))
+    # # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
+    # t_expanded = np.expand_dims(t, axis=2)
+    # # Matrix-Vektor-Multiplikation
+    # result = -np.matmul(R_c2w, t_expanded)
+    # # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
+    # t_c2w = np.squeeze(result, axis=2)
+    #
+    # camtoworlds_movie = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
     camtoworlds_movie[:, :3, 3] *= scale
 
