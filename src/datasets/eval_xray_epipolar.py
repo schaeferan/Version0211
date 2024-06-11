@@ -37,7 +37,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     projection_matrices = parse_projection_matrices(xml_file_path)
     #movie_path = "/home/andre/Schreibtisch/dataloaderxray/XRAY_movie_verification/eval_trajec2020.npy"
-    camtoworlds_movie = np.load(args.dataset.movie_dir)
+    camtoworlds_movie = np.load(args.dataset.movie_file)
     camtoworlds_movie = camtoworlds_movie[:30]
     #projection_matrices = projection_matrices[::10]
 
