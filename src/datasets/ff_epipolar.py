@@ -127,7 +127,7 @@ class FFEpipolar(BaseDataset):
       # During training for additional regularization we chose a random number
       # of reference view for interpolation
       # Top k number of views to consider when randomly sampling
-      total_views = 20
+      total_views = 200
       # Number of reference views to select
       # num_select = self.num_ref_views + np.random.randint(low=-2, high=3)
       num_select = self.num_ref_views
@@ -426,9 +426,8 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
 
-      number = 20
-
-      projection_matrices = projection_matrices[:number]
+      #number = 20
+      #projection_matrices = projection_matrices[:number]
 
       #projection_matrices_array = np.array(projection_matrices)
 
@@ -486,7 +485,7 @@ class FFEpipolar(BaseDataset):
       #                               args.dataset.xray_image_height)
 
       images = self.load_1tif(imgdir)
-      images = images[:number,:,:]
+      #images = images[:number,:,:]
       print("images shape: ", images.shape)
 
       # Transpose such that the first dimension is number of images

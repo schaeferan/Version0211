@@ -118,7 +118,7 @@ def get_dataset_config():
   dataset_config.render_path = False
   dataset_config.spherify = False
   # will take every 1/N images as LLFF test set.
-  dataset_config.llffhold = 10
+  dataset_config.llffhold = 50
   # If True, generate rays through the center of each pixel.
   # Note: While this is the correct way to handle rays, it
   # is not the way rays are handled in the original NeRF paper.
@@ -126,7 +126,7 @@ def get_dataset_config():
   # to store height and width
 
   dataset_config.normalize = True
-  dataset_config.num_interpolation_views = 10#self.num_ref_views
+  dataset_config.num_interpolation_views = 50#self.num_ref_views
 
   # For generalization evaluation
   dataset_config.eval_dataset = "llff"
@@ -239,7 +239,7 @@ def get_train_config():
   # train_config.lr_delay_steps = 2500
   # A multiplier on the learning rate when the step
   # is < lr_delay_steps
-  train_config.lr_delay_mult = 0.08
+  train_config.lr_delay_mult = 0.1
 
   # The gradient clipping magnitude (disabled if == 0).
   train_config.step_factor = 6
