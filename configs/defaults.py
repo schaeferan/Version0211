@@ -118,7 +118,7 @@ def get_dataset_config():
   dataset_config.render_path = False
   dataset_config.spherify = False
   # will take every 1/N images as LLFF test set.
-  dataset_config.llffhold = 50
+  dataset_config.llffhold = 100
   # If True, generate rays through the center of each pixel.
   # Note: While this is the correct way to handle rays, it
   # is not the way rays are handled in the original NeRF paper.

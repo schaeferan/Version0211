@@ -426,8 +426,8 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
 
-      #number = 20
-      #projection_matrices = projection_matrices[:number]
+      number = 120
+      projection_matrices = projection_matrices[:number]
 
       #projection_matrices_array = np.array(projection_matrices)
 
@@ -485,7 +485,7 @@ class FFEpipolar(BaseDataset):
       #                               args.dataset.xray_image_height)
 
       images = self.load_1tif(imgdir)
-      #images = images[:number,:,:]
+      images = images[:number,:,:]
       print("images shape: ", images.shape)
 
       # Transpose such that the first dimension is number of images
