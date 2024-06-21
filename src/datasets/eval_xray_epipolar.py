@@ -46,9 +46,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     #liste_2 = [projection_matrices[i] for i in range(200) if i not in liste_1_indices]
     #projection_matrices = liste_1
 
-    #projection_matrices = projection_matrices[::10]
+    projection_matrices = projection_matrices[::10]
     #projection_matrices = [element for element in projection_matrices if element not in removed_elements]
-    projection_matrices = projection_matrices[:20]
+    #projection_matrices = projection_matrices[:20]
     #projection_matrices = projection_matrices[89:109]
     #self.projection_matrices = np.array(projection_matrices)
 
