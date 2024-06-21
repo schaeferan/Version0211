@@ -426,7 +426,7 @@ class FFEpipolar(BaseDataset):
 
       projection_matrices = parse_projection_matrices(xml_file_path)
 
-      number = 120
+      number = 100
       projection_matrices = projection_matrices[:number]
 
       #projection_matrices_array = np.array(projection_matrices)
