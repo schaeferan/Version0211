@@ -188,7 +188,7 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 1#127 #num of samples
+  model_config.num_projections = 2#127 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
