@@ -157,8 +157,7 @@ class FFEpipolar(BaseDataset):
           target_worldtocam=batch_target_worldtocam,
           ref_worldtocamera=np.tile(ref_worldtocamera, (l_devices, 1, 1)),
           ref_cameratoworld=np.tile(ref_cameratoworld, (l_devices, 1, 1)),
-          intrinsic_matrix=np.tile(self.intrinsic_matrix[None, :],
-                                   (l_devices, 1, 1)),
+          intrinsic_matrix=np.tile(self.intrinsic_matrix, (l_devices, 1, 1)),
           min_depth=np.tile(self.min_depth[None, :], (l_devices, 1)),
           max_depth=np.tile(self.max_depth[None, :], (l_devices, 1)),
       )
@@ -231,8 +230,7 @@ class FFEpipolar(BaseDataset):
         target_worldtocam=batch_target_worldtocam,
         ref_worldtocamera=np.tile(ref_worldtocamera, (l_devices, 1, 1)),
         ref_cameratoworld=np.tile(ref_cameratoworld, (l_devices, 1, 1)),
-        intrinsic_matrix=np.tile(self.intrinsic_matrix[None, :],
-                                 (l_devices, 1, 1)),
+        intrinsic_matrix=np.tile(self.intrinsic_matrix,(l_devices, 1, 1)),
         min_depth=np.tile(self.min_depth[None, :], (l_devices, 1)),
         max_depth=np.tile(self.max_depth[None, :], (l_devices, 1)),
     )
@@ -420,14 +418,17 @@ class FFEpipolar(BaseDataset):
           """
       ####################################################################################################################
 
-      # xml_file_path = '/home/andre/CONRAD_data/Conrad_base.xml'
-      #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
-      xml_file_path = args.dataset.XML_dir
+      cam2worlds_path = args.dataset.cam2worlds_dir
+      intrinsic_matrices_path = args.dataset.I_dir
+      focals_path = args.dataset.I0_dir
 
-      projection_matrices = parse_projection_matrices(xml_file_path)
+      projection_matrices = np.load(cam2worlds_path)
+      intrinsic_matrices = np.load(intrinsic_matrices_path)
+      focals = np.load(focals_path)
 
-      number = 100
-      projection_matrices = projection_matrices[:number]
+
+      number = 400
+      camtoworlds = projection_matrices[:number]
 
       #projection_matrices_array = np.array(projection_matrices)
 
@@ -448,8 +449,8 @@ class FFEpipolar(BaseDataset):
       #projection_matrices = projection_matrices[:args.dataset.eval_length]
       # self.projection_matrices = np.array(projection_matrices)
 
-      XML_dict = analyze_xml_file(xml_file_path)
-      self.XML_dict = XML_dict
+      #XML_dict = analyze_xml_file(xml_file_path)
+      #self.XML_dict = XML_dict
 
       ## Überprüfen resultierenden Dictionary
       # if result_dict is not None:
@@ -503,33 +504,11 @@ class FFEpipolar(BaseDataset):
       self.h, self.w = images.shape[1:3]
       self.resolution = self.h * self.w
       self.images = images
-      self.focal = 3934.43
 
-      self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
-                                        [0, 3934.43, 488, 0],
-                                        [0, 0, 1, 0]]).astype(np.float32)
+      self.focal = focals
+      self.intrinsic_matrix = intrinsic_matrices
 
-      # CALCULATION OF [R|T]
-      # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-      # # Extrahiere die intrinsische Matrix
-      K = self.intrinsic_matrix[:, :3]
-      # # Berechne die inverse intrinsische Matrix einmalig
-      K_inverse = np.linalg.inv(K)
-      RT = np.matmul(K_inverse, projection_matrices)
-      # Extrahiere die Rotationsmatrix R
-      R = RT[:, :, :3]
-      # Extrahiere die Translationsmatrix t
-      t = RT[:, :, 3]
-      ###############################################################################
-      R_c2w = np.transpose(R, axes=(0, 2, 1))
-      # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
-      t_expanded = np.expand_dims(t, axis=2)
-      # Matrix-Vektor-Multiplikation
-      result = -np.matmul(R_c2w, t_expanded)
-      # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
-      t_c2w = np.squeeze(result, axis=2)
 
-      camtoworlds = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
       # extrinsic_matrices = []
       # for P in projection_matrices:

@@ -69,6 +69,10 @@ def get_dataset_config():
   dataset_config.xray_image_height = 976
   dataset_config.xray_image_width = 976
   dataset_config.XML_dir = ""
+  dataset_config.I_dir = ""
+  dataset_config.I0_dir = ""
+  dataset_config.cam2worlds_dir = ""
+
 
   # --------------------------------------------------------
   dataset_config.name = "ff_epipolar"
