@@ -38,7 +38,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     projection_matrices = parse_projection_matrices(xml_file_path)
     #movie_path = "/home/andre/Schreibtisch/dataloaderxray/XRAY_movie_verification/eval_trajec2020.npy"
     camtoworlds_movie = np.load(args.dataset.movie_file)
-    camtoworlds_movie = camtoworlds_movie[:30]
+    #camtoworlds_movie = camtoworlds_movie[:30]
     #projection_matrices = projection_matrices[::10]
 
     # Liste 1 mit den spezifizierten Indexpositionen
@@ -51,7 +51,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     #projection_matrices = projection_matrices[::10]
     #projection_matrices = [element for element in projection_matrices if element not in removed_elements]
     #movie_matrices = projection_matrices[20:30]
-    projection_matrices = projection_matrices[:20]
+    #projection_matrices = projection_matrices[:20]
     #projection_matrices = projection_matrices[89:109]
     #self.projection_matrices = np.array(projection_matrices)
 
