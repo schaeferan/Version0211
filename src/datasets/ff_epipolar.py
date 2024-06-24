@@ -127,7 +127,7 @@ class FFEpipolar(BaseDataset):
       # During training for additional regularization we chose a random number
       # of reference view for interpolation
       # Top k number of views to consider when randomly sampling
-      total_views = 40
+      total_views = 5
       # Number of reference views to select
       # num_select = self.num_ref_views + np.random.randint(low=-2, high=3)
       num_select = self.num_ref_views
@@ -264,7 +264,7 @@ class FFEpipolar(BaseDataset):
 
     return return_batch
 
-  def load_1tif(self, imgdir): #load_1tif
+  def _load_1tif(self, imgdir): #load_1tif
 
       print("in load_1tif")
 
