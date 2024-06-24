@@ -101,57 +101,14 @@ class EvalXRAYEpipolar(FFEpipolar):
     self.h, self.w = images.shape[1:3]
     self.resolution = self.h * self.w
     self.images = images
-    self.focal = 3934.43
+    self.focal =
 ########################################################################################################################
-    # # Erstelle leere Listen, um intrinsische und extrinsische Parameter für jede Projektionsmatrix zu speichern
-    # intrinsics_list = []
-    # extrinsics_list = []
-    #
-    # for P in projection_matrices:
-    #   # # Wende SVD auf die Projektionsmatrix an
-    #   # U, S, Vt = svd(P)
-    #   #
-    #   # # Extrahiere die intrinsische Matrix K
-    #   # K = U[:, :3] @ np.diag(S[:3]) @ Vt[:3, :]
-    #   #
-    #   # # Extrahiere die extrinsische Matrix [R | T]
-    #   # R = U[:, :3]
-    #   # T = (1 / S[0]) * Vt[3, :]
-    #   #
-    #   # # Füge die intrinsischen und extrinsischen Parameter zur jeweiligen Liste hinzu
-    #   # intrinsics_list.append(K)
-    #   # extrinsics_list.append(np.hstack((R, T.reshape(3, 1))))
-    #
-    #   #########################################################################################################
-    #   # Extrahiere die intrinsische Matrix
-    #   K = P[:, :3]#Das ist doch nicht die intrinsic??
-    #
-    #   # Extrahiere die extrinsische Matrix [R | T]
-    #   R = np.linalg.inv(K) @ P[:, :3]
-    #   T = np.linalg.inv(K) @ P[:, 3]
-    #
-    #   # Füge die intrinsische und extrinsische Matrizen zur jeweiligen Liste hinzu
-    #   intrinsics_list.append(K)
-    #   extrinsics_list.append(np.hstack((R, T.reshape(3, 1))))
-    #   #########################################################################################################
-    #
-    #   #M = P[:3,:3]
-    #   #R2, Q2 = rq(M)
-    #
-    #   #K = R2
-    #   #R = Q2
-    #
-    #   #intrinsics_list.append(K)
-    #   #xtrinsics_list.append(R)
-    #
-    # # Konvertiere die Listen in NumPy-Arrays
-    # intrinsics_array = np.array(intrinsics_list)
-    # extrinsics_array = np.array(extrinsics_list)
-    # extrinsic_matrices.append(np.hstack((R, t.reshape(3, 1))))
+
 ########################################################################################################################
-    self.intrinsic_matrix = np.array([[3934.43, 0, 488, 0],
-                                      [0, 3934.43, 488, 0],
+    self.intrinsic_matrix = np.array([[3821.2, 0, 477, 0],
+                                      [0, 3821.2, 495, 0],
                                       [0, 0, 1, 0]]).astype(np.float32)
+
 
     # CALCULATION OF [R|T]
     # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
