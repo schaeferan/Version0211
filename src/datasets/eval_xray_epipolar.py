@@ -83,13 +83,14 @@ class EvalXRAYEpipolar(FFEpipolar):
     width = 976#args.dataset.ff_image_width
 
     images = self._load_1tif(imgdir)
+    print("86 images shape:", images.shape)
 
     #images = self._load_images_tif(imgdir, width, height)
     #images = self._load_images_tif(imgdir, args.dataset.eval_xray_image_width,
     #                           args.dataset.eval_xray_image_height)
 
-    # Transpose such that the first dimension is number of images
-    images = np.moveaxis(images, -1, 0)
+    ## Transpose such that the first dimension is number of images
+    #images = np.moveaxis(images, -1, 0)
 
     if args.model.num_rgb_channels == 3:
       # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
