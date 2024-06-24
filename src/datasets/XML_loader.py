@@ -42,6 +42,36 @@ import numpy as np
 #         print(f"Fehler beim Parsen der XML-Datei: {str(e)}")
 #         return []
 
+def extract_projection_matrices_DRR(xml_file_path):
+    """
+    Extrahiert die Projektionsmatrizen aus einer XML-Datei und gibt sie als 3D-Array zurück.
+
+    Args:
+    - xml_file_path (str): Pfad zur XML-Datei, die die Projektionsmatrizen enthält.
+
+    Returns:
+    - projection_matrices_array (np.ndarray): 3D-Array der Projektionsmatrizen (Anzahl der Matrizen, 3, 4).
+    """
+
+    # XML-Datei parsen
+    tree = ET.parse(xml_file_path)
+    root = tree.getroot()
+
+    # Liste für die Projektionsmatrizen
+    projection_matrices = []
+
+    # Projektionsmatrizen aus dem XML extrahieren
+    for i in range(400):
+        matrix_element = root.find(f'./ElementList/PROJECTION_MATRICES/M{i}')
+        if matrix_element is not None:
+            matrix_values = list(map(float, matrix_element.text.split()))
+            projection_matrices.append(matrix_values)
+
+    # In ein 3D-Array umwandeln (Anzahl der Matrizen, Zeilen, Spalten)
+    projection_matrices_array = np.array(projection_matrices).reshape(400, 3, 4)
+
+    return projection_matrices_array
+
 def parse_projection_matrices(xml_file_path):
     try:
         # XML-Datei parsen
