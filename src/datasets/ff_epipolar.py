@@ -148,6 +148,8 @@ class FFEpipolar(BaseDataset):
       ref_cameratoworld = self.camtoworlds[batch_near_cam_idx]
       ref_worldtocamera = self.worldtocamera[batch_near_cam_idx]
 
+      intrinsic_matrix = self.intrinsic_matrix[batch_near_cam_idx]######dad ist hier neu
+
       # Each of these reference data need to be shared onto each local device.
       # To support this we replicate the reference data as many times as there
       # are local devices
@@ -157,7 +159,7 @@ class FFEpipolar(BaseDataset):
           target_worldtocam=batch_target_worldtocam,
           ref_worldtocamera=np.tile(ref_worldtocamera, (l_devices, 1, 1)),
           ref_cameratoworld=np.tile(ref_cameratoworld, (l_devices, 1, 1)),
-          intrinsic_matrix=np.tile(self.intrinsic_matrix, (l_devices, 1, 1)),
+          intrinsic_matrix=np.tile(intrinsic_matrix, (l_devices, 1, 1)),
           min_depth=np.tile(self.min_depth[None, :], (l_devices, 1)),
           max_depth=np.tile(self.max_depth[None, :], (l_devices, 1)),
       )
