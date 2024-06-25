@@ -156,8 +156,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     print("images shape: ", images.shape)
     camtoworlds = camtoworlds[indices]
     print("cam2worlds shape: ", camtoworlds.shape)
-    #intrinsic_matrix = intrinsic_matrices[indices]
-    #print("intrinsics shape: ", intrinsic_matrix.shape)
+    intrinsic_matrix = intrinsic_matrices[indices]
+    print("intrinsics shape: ", intrinsic_matrix.shape)
 
     self.images = images
     self.camtoworlds = camtoworlds

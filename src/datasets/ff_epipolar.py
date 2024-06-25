@@ -224,8 +224,9 @@ class FFEpipolar(BaseDataset):
     ref_cameratoworld = self.train_camtoworlds[batch_near_cam_idx]
     ref_worldtocamera = self.train_worldtocamera[batch_near_cam_idx]
     print("test I vorher: ", self.intrinsic_matrix.shape)
-    intrinsic_matrix = self.intrinsic_matrix[batch_near_cam_idx]########das ist neu
+    intrinsic_matrix = self.intrinsic_matrix[idx]  ########das ist neu
     print("test I nachher: ", intrinsic_matrix.shape)
+
 
     #--------------------------------------------------------------------------------------
     # Replicate these so that they may be distributed onto several devices for
