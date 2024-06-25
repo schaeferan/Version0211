@@ -84,6 +84,7 @@ class RayProjector:
     print("#############################", intrinsic_matrix.shape)
     #intrinsic_matrix = einshape("1xy->111xy", intrinsic_matrix)#hier #original
     intrinsic_matrix = einshape("nxy->n11xy", intrinsic_matrix)
+    print("#############################", intrinsic_matrix.shape)
 
 
     kw = jnp.matmul(
