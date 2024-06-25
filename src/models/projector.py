@@ -279,8 +279,8 @@ class RayProjector:
     camera_dirs = jnp.matmul(
         #inverse_intrisics[None, None, :],
         inverse_intrisics[:,None,:, :],
-        pixels[Ellipsis, None],
-        #pixels[..., None],
+        #pixels[Ellipsis, None],
+        pixels[..., None],
         precision=self.precision)  # (N, B, P, 3, 1)
 
     # ref_cameratoworld has shape (N, 3, 4). We only want the rotation part of
