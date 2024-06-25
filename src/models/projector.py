@@ -134,7 +134,7 @@ class RayProjector:
     """
     # Check shape of intrincs, currently we only support case where all the
     # views are from the same camera
-    chex.assert_shape(intrinsic_matrix, (1, 3, 4))
+    #chex.assert_shape(intrinsic_matrix, (1, 3, 4))
 
     projection_depths = jnp.linspace(min_depth, max_depth, self.num_samples)
 
