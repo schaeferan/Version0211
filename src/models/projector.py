@@ -275,7 +275,7 @@ class RayProjector:
     # camera_dirs = (inverse_intrisics[None, None, :] @ pixels[..., None]
     #              )  #(N, B, P, 3, 1)
 
-    print("########## pixels : ", pixels.shape)
+    print("########## pixels : ", pixels[Ellipsis, None].shape)
     print("########## Inv [:,N,N] : ", inverse_intrisics[:, None, None].shape)
     print("########## Inv [:,N,N, :] : ", inverse_intrisics[:, None, None, :].shape)
     print("########## Inv [N,N, :] : ", inverse_intrisics[None, None, :].shape)
