@@ -264,8 +264,11 @@ class RayProjector:
     ]]  # Reverse back for ray generation (we need width dim x height dim)
     pixels = jnp.concatenate([pixels, jnp.ones_like(pixels[Ellipsis, 0:1])],
                              axis=-1)  # (N, B, P, 3)
+
+    print("########### I : ", intrinsic_matrix.shape)
     inverse_intrisics = jnp.linalg.inv(
         intrinsic_matrix[Ellipsis, :3, :3])  # (   1, 3, 3)
+    print("########### Iinv : ", inverse_intrisics.shape)
 
     # We will change pixels to  shape (N, B, P, 3, 1)
     # and inverse_intrinsics to shape (1, 1, 1, 3, 3)
