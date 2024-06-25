@@ -127,7 +127,7 @@ class FFEpipolar(BaseDataset):
       # During training for additional regularization we chose a random number
       # of reference view for interpolation
       # Top k number of views to consider when randomly sampling
-      total_views = 5
+      total_views = 2
       # Number of reference views to select
       # num_select = self.num_ref_views + np.random.randint(low=-2, high=3)
       num_select = self.num_ref_views
