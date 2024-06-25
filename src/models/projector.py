@@ -274,8 +274,11 @@ class RayProjector:
     # and inverse_intrinsics to shape (1, 1, 1, 3, 3)
     # camera_dirs = (inverse_intrisics[None, None, :] @ pixels[..., None]
     #              )  #(N, B, P, 3, 1)
+
+    print("########## pixels : ", pixels.shape)
     camera_dirs = jnp.matmul(
-        inverse_intrisics[None, None, :],
+        #inverse_intrisics[None, None, :],
+        inverse_intrisics[None, :],
         pixels[Ellipsis, None],
         precision=self.precision)  # (N, B, P, 3, 1)
 
