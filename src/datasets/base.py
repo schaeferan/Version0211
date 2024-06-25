@@ -255,16 +255,14 @@ class BaseDataset(threading.Thread):
     inverse_intrisics = np.linalg.inv(self.intrinsic_matrix[Ellipsis, :3, :3])
 
     #camera_dirs sind Richtungsvektoren im Kamerakoordinatensystem, und sie repräsentieren die Richtungen von der Kamera zu den Pixeln auf dem Bild.
-    camera_dirs = (inverse_intrisics[None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
+    camera_dirs = (inverse_intrisics[:, None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
 
     #directions sind die gleichen Richtungsvektoren, jedoch nach der Transformation in Weltkoordinaten, um die Szene zu repräsentieren.
-    directions = (self.camtoworlds[:, None, None, :3, :3]
-                  @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
+    directions = (self.camtoworlds[:, None, None, :3, :3] @ camera_dirs[Ellipsis, None])[Ellipsis, 0]
 
-    test = self.camtoworlds[:, None, None, :3, :3]
+    #test = self.camtoworlds[:, None, None, :3, :3]
 
-    origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
-                              directions.shape)
+    origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1], directions.shape)
     viewdirs = directions / np.linalg.norm(directions, axis=-1, keepdims=True)
 
     #origins_path = '/home/andre/Schreibtisch/dataloader1/origins.npy'

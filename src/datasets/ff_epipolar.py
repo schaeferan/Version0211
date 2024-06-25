@@ -157,8 +157,7 @@ class FFEpipolar(BaseDataset):
           target_worldtocam=batch_target_worldtocam,
           ref_worldtocamera=np.tile(ref_worldtocamera, (l_devices, 1, 1)),
           ref_cameratoworld=np.tile(ref_cameratoworld, (l_devices, 1, 1)),
-          intrinsic_matrix=np.tile(self.intrinsic_matrix[None, :],
-                                   (l_devices, 1, 1)),
+          intrinsic_matrix=np.tile(self.intrinsic_matrix, (l_devices, 1, 1)),
           min_depth=np.tile(self.min_depth[None, :], (l_devices, 1)),
           max_depth=np.tile(self.max_depth[None, :], (l_devices, 1)),
       )
@@ -231,8 +230,7 @@ class FFEpipolar(BaseDataset):
         target_worldtocam=batch_target_worldtocam,
         ref_worldtocamera=np.tile(ref_worldtocamera, (l_devices, 1, 1)),
         ref_cameratoworld=np.tile(ref_cameratoworld, (l_devices, 1, 1)),
-        intrinsic_matrix=np.tile(self.intrinsic_matrix[None, :],
-                                 (l_devices, 1, 1)),
+        intrinsic_matrix=np.tile(self.intrinsic_matrix, (l_devices, 1, 1)),
         min_depth=np.tile(self.min_depth[None, :], (l_devices, 1)),
         max_depth=np.tile(self.max_depth[None, :], (l_devices, 1)),
     )

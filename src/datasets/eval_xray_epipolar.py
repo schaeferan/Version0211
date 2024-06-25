@@ -3,7 +3,7 @@
 import os
 from os import path
 import matplotlib.pyplot as plt
-from gen_patch_neural_rendering.src.datasets.XML_loader import extract_projection_matrices_DRR
+from gen_patch_neural_rendering.src.datasets.XML_loader import extract_projection_matrices_DRR, process_projection_matrices
 #import imageio
 import imageio.v2 as imageio
 from numpy.linalg import svd
@@ -36,7 +36,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     xml_file_path = args.dataset.XML_dir
 
     projection_matrices = extract_projection_matrices_DRR(xml_file_path)
-    projection_matrices = projection_matrices / 0.0016076
+    intrinsic_matrices, camtoworlds = process_projection_matrices(projection_matrices)
+
+    self.intrinsic_matrix = intrinsic_matrices
 
     #projection_matrices = projection_matrices[::10]
 
@@ -85,60 +87,14 @@ class EvalXRAYEpipolar(FFEpipolar):
     images = self._load_1tif(imgdir)
     print("86 images shape:", images.shape)
 
-    #images = self._load_images_tif(imgdir, width, height)
-    #images = self._load_images_tif(imgdir, args.dataset.eval_xray_image_width,
-    #                           args.dataset.eval_xray_image_height)
-
-    ## Transpose such that the first dimension is number of images
-    #images = np.moveaxis(images, -1, 0)
-
-    #if args.model.num_rgb_channels == 3:
-    #  # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
-    #  # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
-    #  images = np.expand_dims(images, axis=-1)
-    #  # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
-    #  images = np.repeat(images, 3, axis=-1)
-
     images = images.astype(np.uint8)
 
     self.h, self.w = images.shape[1:3]
     self.resolution = self.h * self.w
     self.images = images
-    self.focal = 3821.2
+    #self.focal = 3821.2
 ########################################################################################################################
 
-########################################################################################################################
-    self.intrinsic_matrix = np.array([[3821.2, 0, 477, 0],
-                                      [0, 3821.2, 495, 0],
-                                      [0, 0, 1, 0]]).astype(np.float32)
-
-    # mean intrinsic
-    # intrinsic_matrix = np.array([
-    #     [6.14296, 0, 0.767191, 0],
-    #     [0, 6.14296, 0.796057, 0],
-    #     [0, 0, 0.0016076, 0]])
-
-    # CALCULATION OF [R|T]
-    # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-    # # Extrahiere die intrinsische Matrix
-    K = self.intrinsic_matrix[:, :3]
-    # # Berechne die inverse intrinsische Matrix einmalig
-    K_inverse = np.linalg.inv(K)
-    RT = np.matmul(K_inverse, projection_matrices)
-    # Extrahiere die Rotationsmatrix R
-    R = RT[:, :, :3]
-    # Extrahiere die Translationsmatrix t
-    t = RT[:, :, 3]
-    ###############################################################################
-    R_c2w = np.transpose(R, axes=(0, 2, 1))
-    # Wir erweitern die Dimensionen von t, sodass es die Form (200, 3, 1) hat
-    t_expanded = np.expand_dims(t, axis=2)
-    # Matrix-Vektor-Multiplikation
-    result = -np.matmul(R_c2w, t_expanded)
-    # Die resultierende Form ist (200, 3, 1), also reduzieren wir die Dimensionen
-    t_c2w = np.squeeze(result, axis=2)
-
-    camtoworlds = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
 ########################################################################################################################
 
@@ -152,13 +108,13 @@ class EvalXRAYEpipolar(FFEpipolar):
     factor_h = 976 / height
     factor_w = 976 / width
 
-    # Passe die Breite entsprechend an
-    self.intrinsic_matrix[0, 0] /= factor_w  # Fokallänge in x-Richtung
-    self.intrinsic_matrix[0, 2] /= factor_w  # Hauptpunkt in x-Richtung
-
-    # Passe die Höhe entsprechend an
-    self.intrinsic_matrix[1, 1] /= factor_h  # Fokallänge in y-Richtung
-    self.intrinsic_matrix[1, 2] /= factor_h  # Hauptpunkt in y-Richtung
+    # # Passe die Breite entsprechend an
+    # self.intrinsic_matrix[0, 0] /= factor_w  # Fokallänge in x-Richtung
+    # self.intrinsic_matrix[0, 2] /= factor_w  # Hauptpunkt in x-Richtung
+    #
+    # # Passe die Höhe entsprechend an
+    # self.intrinsic_matrix[1, 1] /= factor_h  # Fokallänge in y-Richtung
+    # self.intrinsic_matrix[1, 2] /= factor_h  # Hauptpunkt in y-Richtung
 
     self.min_depth = scale * self.min_depth
     self.max_depth = scale * self.max_depth
@@ -211,11 +167,10 @@ class EvalXRAYEpipolar(FFEpipolar):
     inverse_intrisics = np.linalg.inv(self.intrinsic_matrix[Ellipsis, :3, :3])
 
     # camera_dirs sind Richtungsvektoren im Kamerakoordinatensystem, und sie repräsentieren die Richtungen von der Kamera zu den Pixeln auf dem Bild.
-    camera_dirs = (inverse_intrisics[None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
+    camera_dirs = (inverse_intrisics[:,None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
 
     # directions sind die gleichen Richtungsvektoren, jedoch nach der Transformation in Weltkoordinaten, um die Szene zu repräsentieren.
-    directions = (self.camtoworlds[:, None, None, :3, :3]
-                  @ camera_dirs[None, Ellipsis, None])[Ellipsis, 0]
+    directions = (self.camtoworlds[:, None, None, :3, :3]@ camera_dirs[Ellipsis, None])[Ellipsis, 0]
 
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)
