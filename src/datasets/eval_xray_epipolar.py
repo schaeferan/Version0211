@@ -38,7 +38,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     projection_matrices = extract_projection_matrices_DRR(xml_file_path)
     intrinsic_matrices, camtoworlds = process_projection_matrices(projection_matrices)
 
-    self.intrinsic_matrix = intrinsic_matrices
+    intrinsic_matrix = intrinsic_matrices
 
     #projection_matrices = projection_matrices[::10]
 
@@ -144,13 +144,15 @@ class EvalXRAYEpipolar(FFEpipolar):
       indices = i_test
 
     images = images[indices]
-    print(images.shape)
+    print("images shape: ", images.shape)
     camtoworlds = camtoworlds[indices]
-    print(camtoworlds.shape)
+    print("cam2worlds shape: ", camtoworlds.shape)
+    intrinsic_matrix = intrinsic_matrices[indices]
+    print("intrinsics shape: ", intrinsic_matrix)
 
     self.images = images
     self.camtoworlds = camtoworlds
-
+    self.intrinsic_matrix = intrinsic_matrix
     self.n_examples = images.shape[0]
 
   def _generate_rays(self):
@@ -170,7 +172,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     camera_dirs = (inverse_intrisics[:,None, None, :] @ pixels[Ellipsis, None])[Ellipsis, 0]
 
     # directions sind die gleichen Richtungsvektoren, jedoch nach der Transformation in Weltkoordinaten, um die Szene zu repräsentieren.
-    directions = (self.camtoworlds[:, None, None, :3, :3]@ camera_dirs[Ellipsis, None])[Ellipsis, 0]
+    directions = (self.camtoworlds[:, None, None, :3, :3] @ camera_dirs[Ellipsis, None])[Ellipsis, 0]
 
     origins = np.broadcast_to(self.camtoworlds[:, None, None, :3, -1],
                               directions.shape)
