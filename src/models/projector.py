@@ -81,7 +81,8 @@ class RayProjector:
     """
     ref_worldtocamera = einshape("nyy->n11yy", ref_worldtocamera)
     wcoords = einshape("bpy->1bpy1", wcoords)
-    intrinsic_matrix = einshape("1xy->111xy", intrinsic_matrix)
+    intrinsic_matrix = einshape("1xy->111xy", intrinsic_matrix)#hier
+    print(intrinsic_matrix.shape)
 
     kw = jnp.matmul(
         intrinsic_matrix, ref_worldtocamera, precision=self.precision)
@@ -147,7 +148,7 @@ class RayProjector:
     # (#rays, num_samples, 3) -> (#rays, num_samples, 4)
     wcoords = jnp.concatenate(
         [wcoords, jnp.ones_like(wcoords[Ellipsis, 0:1])], axis=-1)
-    pcoords, proj_frontof_cam_mask = self.project2camera(
+    pcoords, proj_frontof_cam_mask = self.project2camera(#hier
         wcoords, ref_worldtocamera, intrinsic_matrix)
 
     # Find projections that are inside the image
