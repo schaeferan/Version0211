@@ -79,12 +79,14 @@ class RayProjector:
       pcoord: projected coordinates
       proj_frontof_cam_mask: false if projections are behind camera
     """
+    print("#############################ref", ref_worldtocamera.shape)
     ref_worldtocamera = einshape("nyy->n11yy", ref_worldtocamera)
+    print("#############################ref", ref_worldtocamera.shape)
     wcoords = einshape("bpy->1bpy1", wcoords)
-    print("#############################", intrinsic_matrix.shape)
+    print("#############################I", intrinsic_matrix.shape)
     #intrinsic_matrix = einshape("1xy->111xy", intrinsic_matrix)#hier #original
     intrinsic_matrix = einshape("nxy->n11xy", intrinsic_matrix)
-    print("#############################", intrinsic_matrix.shape)
+    print("#############################I", intrinsic_matrix.shape)
 
 
     kw = jnp.matmul(
