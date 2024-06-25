@@ -38,6 +38,15 @@ class EvalXRAYEpipolar(FFEpipolar):
     projection_matrices = extract_projection_matrices_DRR(xml_file_path)
     intrinsic_matrices, camtoworlds = process_projection_matrices(projection_matrices)
 
+    new_shape = (400, 3, 4)
+    new_array = np.zeros(new_shape)
+    # Copy the original array values into the new array
+    new_array[:, :, :3] = intrinsic_matrices
+    intrinsic_matrices = new_array
+    print("test: ",intrinsic_matrices.shape)
+
+
+
     intrinsic_matrix = intrinsic_matrices
 
     #projection_matrices = projection_matrices[::10]

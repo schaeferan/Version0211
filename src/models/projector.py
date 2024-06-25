@@ -82,7 +82,7 @@ class RayProjector:
     ref_worldtocamera = einshape("nyy->n11yy", ref_worldtocamera)
     wcoords = einshape("bpy->1bpy1", wcoords)
     print("#############################", intrinsic_matrix.shape)
-    #intrinsic_matrix = einshape("1xy->111xy", intrinsic_matrix)#hier
+    #intrinsic_matrix = einshape("1xy->111xy", intrinsic_matrix)#hier #original
     intrinsic_matrix = einshape("nxy->n11xy", intrinsic_matrix)
 
 
