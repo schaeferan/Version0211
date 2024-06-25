@@ -92,12 +92,12 @@ class EvalXRAYEpipolar(FFEpipolar):
     ## Transpose such that the first dimension is number of images
     #images = np.moveaxis(images, -1, 0)
 
-    if args.model.num_rgb_channels == 3:
-      # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
-      # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
-      images = np.expand_dims(images, axis=-1)
-      # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
-      images = np.repeat(images, 3, axis=-1)
+    #if args.model.num_rgb_channels == 3:
+    #  # Annahme: grayscale_images ist das ursprüngliche Array mit der Form (10, 976, 976)
+    #  # Füge eine zusätzliche Dimension hinzu, um Platz für die RGB-Kanäle zu schaffen
+    #  images = np.expand_dims(images, axis=-1)
+    #  # # Wiederhole den Kanal 3-mal, um eine 3-Kanal-RGB-Darstellung zu erstellen
+    #  images = np.repeat(images, 3, axis=-1)
 
     images = images.astype(np.uint8)
 
