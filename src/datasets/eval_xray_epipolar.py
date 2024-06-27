@@ -98,6 +98,7 @@ class EvalXRAYEpipolar(FFEpipolar):
     width = 976#args.dataset.ff_image_width
 
     images = self._load_1tif(imgdir)
+    images = images[::args.dataset.angle_steps]
     print("86 images shape:", images.shape)
 
     images = images.astype(np.uint8)
