@@ -38,6 +38,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     projection_matrices = extract_projection_matrices_DRR(xml_file_path)
     intrinsic_matrices, camtoworlds = process_projection_matrices(projection_matrices)
 
+    intrinsic_matrices = intrinsic_matrices[::args.dataset.angle_steps]
+    camtoworlds = camtoworlds[::args.dataset.angle_steps]
+
     new_shape = (400, 3, 4)
     new_array = np.zeros(new_shape)
     # Copy the original array values into the new array

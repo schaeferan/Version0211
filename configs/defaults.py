@@ -93,6 +93,7 @@ def get_dataset_config():
   #--------------------------------------------------------
   dataset_config.eval_xray_dir = ""
   dataset_config.eval_length = 20
+  dataset_config.angle_steps = 1
   dataset_config.eval_xray_image_height = 976
   dataset_config.eval_xray_image_width = 976
 
