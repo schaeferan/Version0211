@@ -41,12 +41,13 @@ class EvalXRAYEpipolar(FFEpipolar):
     intrinsic_matrices = intrinsic_matrices[::args.dataset.angle_steps]
     camtoworlds = camtoworlds[::args.dataset.angle_steps]
 
-    new_shape = (400, 3, 4)
+    #wieso? ah um dimension anzupassen um auf 3,4 zu kommen weil vorher 3,3
+    new_shape = (intrinsic_matrices.shape[0], 3, 4)
     new_array = np.zeros(new_shape)
     # Copy the original array values into the new array
     new_array[:, :, :3] = intrinsic_matrices
     intrinsic_matrices = new_array
-    print("test: ",intrinsic_matrices.shape)
+    print("test: ", intrinsic_matrices.shape)
 
 
 
