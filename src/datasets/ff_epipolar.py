@@ -109,7 +109,9 @@ class FFEpipolar(BaseDataset):
     """Sample batch for training."""
 
     if self.batching == "single_image":
+      print("n examples: ", self.n_examples)
       image_index = np.random.randint(0, self.n_examples, ())
+      print("image index: ", image_index)
       ray_indices = np.random.randint(0, self.rays.batch_shape[1],
                                       (self.batch_size,))
 
@@ -127,18 +129,19 @@ class FFEpipolar(BaseDataset):
       # During training for additional regularization we chose a random number
       # of reference view for interpolation
       # Top k number of views to consider when randomly sampling
-      total_views = 20
+      total_views = 5
       # Number of reference views to select
       # num_select = self.num_ref_views + np.random.randint(low=-2, high=3)
       num_select = self.num_ref_views
 
       # Get the set of precomputed nearest camera indices
       batch_near_cam_idx = self.sorted_near_cam[image_index][:total_views]
+      print("training bnci vorher:", batch_near_cam_idx)
       batch_near_cam_idx = np.random.choice(
           batch_near_cam_idx,
           min(num_select, len(batch_near_cam_idx)),
           replace=False)
-
+      print("training bnci nach random choice:", batch_near_cam_idx)
       #--------------------------------------------------------------------------------------
       # Get the reference data
       ref_images = self.images[batch_near_cam_idx]
@@ -214,7 +217,9 @@ class FFEpipolar(BaseDataset):
                                       (l_devices, 1, 1))
     #--------------------------------------------------------------------------------------
     # Get the reference data
+    print("idx: ", idx)
     batch_near_cam_idx = self.sorted_near_cam[idx]
+    print("batch cam near index :", batch_near_cam_idx)
     ref_images = self.train_images[batch_near_cam_idx]
 
     #if args.dataset.eval_dataset == "xray" :
@@ -224,7 +229,7 @@ class FFEpipolar(BaseDataset):
     ref_cameratoworld = self.train_camtoworlds[batch_near_cam_idx]
     ref_worldtocamera = self.train_worldtocamera[batch_near_cam_idx]
     print("test I vorher: ", self.intrinsic_matrix.shape)
-    print("idx:", idx)
+    #print("idx:", idx)
     intrinsic_matrix = self.intrinsic_matrix[idx]  ########das ist neu
     print("test I nachher: ", intrinsic_matrix.shape)
 
