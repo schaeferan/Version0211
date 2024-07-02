@@ -114,7 +114,7 @@ def create_eval_dataset(args):
   elif args.dataset.eval_dataset == "xray":
     eval_ds_list = {}
     if not args.dataset.eval_scene:
-      scene_list = ["DRR"]#["SheppLogan"]  # Hier die Szenen für xray hinzufügen
+      scene_list = ["SimpleShape"]#["SheppLogan"]  # Hier die Szenen für xray hinzufügen
     else:
       scene_list = [args.dataset.eval_scene]
 
