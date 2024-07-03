@@ -3,7 +3,7 @@
 import os
 from os import path
 import matplotlib.pyplot as plt
-from gen_patch_neural_rendering.src.datasets.XML_loader import extract_projection_matrices_DRR, process_projection_matrices
+from gen_patch_neural_rendering.src.datasets.XML_loader import extract_projection_matrices_DRR, process_projection_matrices, parse_projection_matrices
 #import imageio
 import imageio.v2 as imageio
 from numpy.linalg import svd
@@ -35,7 +35,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
     xml_file_path = args.dataset.XML_dir
 
-    projection_matrices = extract_projection_matrices_DRR(xml_file_path)
+    projection_matrices = parse_projection_matrices(xml_file_path)
+    #projection_matrices = extract_projection_matrices_DRR(xml_file_path)
     intrinsic_matrices, camtoworlds = process_projection_matrices(projection_matrices)
 
     intrinsic_matrices = intrinsic_matrices[::args.dataset.angle_steps]
@@ -48,7 +49,6 @@ class EvalXRAYEpipolar(FFEpipolar):
     new_array[:, :, :3] = intrinsic_matrices
     intrinsic_matrices = new_array
     print("test: ", intrinsic_matrices.shape)
-
 
 
     intrinsic_matrix = intrinsic_matrices
