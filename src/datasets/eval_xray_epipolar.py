@@ -145,11 +145,16 @@ class EvalXRAYEpipolar(FFEpipolar):
     args.model.near = min
     args.model.far = max
 
+    i_test = np.arange(images.shape[0])[80:100]
+    i_train1 = np.arange(images.shape[0])[75:80]
+    i_train2 = np.arange(images.shape[0])[100:105]
+    i_train = i_train1 + i_train2
+
     # Select the split.
-    i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
+    #i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
     print("i_test: ", i_test)
-    i_train = np.array(
-      [i for i in np.arange(int(images.shape[0])) if i not in i_test])
+    #i_train = np.array(
+    #  [i for i in np.arange(int(images.shape[0])) if i not in i_test])
     print("i_train: ", i_train)
 
     if self.split == "train":
