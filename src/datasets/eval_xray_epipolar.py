@@ -35,8 +35,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     #xml_file_path = "/home/andre/workspace2/CONRAD/SimpleShape.xml"
     xml_file_path = args.dataset.XML_dir
 
-    projection_matrices = parse_projection_matrices(xml_file_path)
-    #projection_matrices = extract_projection_matrices_DRR(xml_file_path)
+    #projection_matrices = parse_projection_matrices(xml_file_path)
+    projection_matrices = extract_projection_matrices_DRR(xml_file_path)
     intrinsic_matrices, camtoworlds = process_projection_matrices(projection_matrices)
 
     intrinsic_matrices = intrinsic_matrices[::args.dataset.angle_steps]
