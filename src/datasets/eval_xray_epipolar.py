@@ -148,7 +148,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     i_test = np.arange(images.shape[0])[80:100]
     i_train1 = np.arange(images.shape[0])[75:80]
     i_train2 = np.arange(images.shape[0])[100:105]
-    i_train = i_train1 + i_train2
+
+    i_train = np.concatenate((i_train1, i_train2))
 
     # Select the split.
     #i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
