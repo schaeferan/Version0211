@@ -28,7 +28,7 @@ python -m gen_patch_neural_rendering.main \
 --ml_config.dataset.name=ff_epipolar: do not change \
 --ml_config.dataset.render_style: do not change
 
---ml_config.dataset.llffhold: 
+--ml_config.dataset.llffhold: in this Experiment 0, because its hard coded
 
 The parameter llffhold specifies the interval index that determines which images from a list of images are selected for the test set. If you have a list of 200 images and set the parameter llffhold to 10, every 10th image will be extracted for the test set, starting with the image at index 0. The selected images would be: 0, 10, 20, 30, and so on. If the parameter llffhold is set to 8, every 8th image will be selected, such as: 0, 8, 16, 24, and so forth.
 
