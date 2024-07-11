@@ -121,36 +121,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     camtoworlds = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
-    # extrinsic_matrices = []
-    # for P in projection_matrices:
-    #
-    #     K = self.intrinsic_matrix[:,:3]
-    #     # Zerlege die Projektionsmatrix P in [R | t]
-    #     K_inverse = np.linalg.inv(K)
-    #     [R, t] = np.dot(K_inverse, P)[:3, :].copy(), np.dot(K_inverse, P)[:3, 3].copy()
-    #
-    #     extrinsic_matrices.append(R)
-    #
-    # extrinsics_array = np.array(extrinsic_matrices)
-    # camtoworlds = extrinsics_array
-
-    ########################################################
-    # # Multipliziere jede Projektionsmatrix mit der inversen intrinsischen Matrix
-    # # # Extrahiere die intrinsische Matrix
-    # K = self.intrinsic_matrix[:, :3]
-    # # # Berechne die inverse intrinsische Matrix einmalig
-    # K_inverse = np.linalg.inv(K)
-    # RT = np.matmul(K_inverse, projection_matrices)
-    # # Extrahiere die Rotationsmatrix R
-    # R2 = RT[:, :, :3]
-    # # Extrahiere die Translationsmatrix t
-    # t2 = RT[:, :, 3]
-    # # Erstelle die extrinsischen Matrizen als 3D-Matrix
-    # extrinsic_matrices = np.concatenate((R2, t2[:, :, np.newaxis]), axis=2)
-
-    #camtoworlds = extrinsic_matrices
-
-
+    
 ########################################################################################################################
 
     ## Convert R matrix from the form [up forward left] to [right up back]
