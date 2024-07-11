@@ -20,12 +20,12 @@ python -m gen_patch_neural_rendering.main \
 
 ## Explanation
 
---workdir: direction for loading weights and saving results
---ml_config.dataset.xray_base_dir: direction for training set images (here no need for that)
---ml_config.dataset.eval_xray_dir: direction for evaluation set images
---ml_config.dataset.XML_dir: direction for projection geometries file
---ml_config.dataset.eval_dataset: do not change
---ml_config.dataset.name=ff_epipolar: do not change
+--workdir: direction for loading weights and saving results \
+--ml_config.dataset.xray_base_dir: direction for training set images (here no need for that) \
+--ml_config.dataset.eval_xray_dir: direction for evaluation set images \
+--ml_config.dataset.XML_dir: direction for projection geometries file \
+--ml_config.dataset.eval_dataset: do not change \
+--ml_config.dataset.name=ff_epipolar: do not change \
 --ml_config.dataset.render_style: do not change
 
 --ml_config.dataset.llffhold: 
@@ -40,8 +40,8 @@ num_interpolation_views=10. This value is the parameter KK from the paper, which
 
 The parameter ml_config.dataset.angle_steps=2 defines the angular resolution of the test set. When set to 1, the test set comprises 400 images with 0.5° increments, covering an angular range from 0° to 200°. Setting this parameter to 2 reduces the test set to 200 images, as images are taken at 1° intervals. When set to 20, the test set includes only 20 images, each captured at 20° intervals.
 
---ml_config.dataset.batch_size=16: number of rays per batch 
---ml_config.eval.chunk=1024: number of rays that are rendered in one step during evaluation
+--ml_config.dataset.batch_size=16: number of rays per batch \
+--ml_config.eval.chunk=1024: number of rays that are rendered in one step during evaluation \
 --ml_config.model.num_rgb_channels=3: do not change
 
 
