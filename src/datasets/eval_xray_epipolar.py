@@ -212,6 +212,7 @@ class EvalXRAYEpipolar(FFEpipolar):
 
     if self.split == "test":
       self.render_poses = pose_utils.generate_spiral_poses(camtoworlds_movie, min, max)#, self.cam_transform)
+      self.render_poses[:, :3, 3] *= scale
 
     # Select the split.
     i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
