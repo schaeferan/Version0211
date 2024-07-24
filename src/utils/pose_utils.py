@@ -121,7 +121,7 @@ def normalize(x):
   return x / np.linalg.norm(x)
 
 
-def generate_spiral_poses(poses, bds, cam_transform):
+def generate_spiral_poses(poses, min, max):
   """Generate spiral poses for rendering.
 
       Args:
@@ -138,7 +138,7 @@ def generate_spiral_poses(poses, bds, cam_transform):
   # Get average pose.
   up = normalize(poses[:, :3, 1].sum(0))
   # Find a reasonable "focus depth" for this dataset.
-  close_depth, inf_depth = bds.min() * .9, bds.max() * 5.
+  close_depth, inf_depth = min * .9, max * 5.
   dt = .75
   mean_dz = 1. / (((1. - dt) / close_depth + dt / inf_depth))
   focal = mean_dz
@@ -162,5 +162,5 @@ def generate_spiral_poses(poses, bds, cam_transform):
     render_poses.append(np.concatenate([viewmatrix(z, up, c), hwf], 1))
 
   render_poses = np.array(render_poses).astype(np.float32)[:, :3, :4]
-  render_poses = render_poses @ cam_transform
+  #render_poses = render_poses @ cam_transform
   return render_poses

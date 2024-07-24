@@ -210,6 +210,9 @@ class EvalXRAYEpipolar(FFEpipolar):
     # i_train = np.arange(images.shape[0])
     # i_test = np.array([0])
 
+    if self.split == "test":
+      self.render_poses = pose_utils.generate_spiral_poses(camtoworlds_movie, min, max)#, self.cam_transform)
+
     # Select the split.
     i_test = np.arange(images.shape[0])[::args.dataset.llffhold]
     print("i_test: ", i_test)
@@ -253,10 +256,8 @@ class EvalXRAYEpipolar(FFEpipolar):
     #
     # camtoworlds_movie = np.concatenate((R_c2w, t_c2w[:, :, np.newaxis]), axis=2)
 
-    camtoworlds_movie[:, :3, 3] *= scale
-
-    #self.render_poses = np.load(args.dataset.movie_dir)
-    self.render_poses = camtoworlds_movie
+    #camtoworlds_movie[:, :3, 3] *= scale
+    #self.render_poses = camtoworlds_movie
     ###################################################################################################################
     if args.dataset.render_path and self.split == "test":
       self.n_examples = self.render_poses.shape[0]

@@ -127,7 +127,7 @@ def get_dataset_config():
   # to store height and width
 
   dataset_config.normalize = True
-  dataset_config.num_interpolation_views = 12#self.num_ref_views
+  dataset_config.num_interpolation_views = 6#self.num_ref_views
 
   # For generalization evaluation
   dataset_config.eval_dataset = "llff"
@@ -189,7 +189,7 @@ def get_model_config():
 
   #--------------------------------------
   # For epipolar projection
-  model_config.num_projections = 63 #num of samples
+  model_config.num_projections = 45 #num of samples
   model_config.interpolation_type = "rounding"
   model_config.mask_invalid_projection = False
 
